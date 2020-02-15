@@ -6,7 +6,7 @@ namespace Data.Entity
     {
         public int Number { get; set; }
 
-        public string type { get; set; }
+        public string Type { get; set; }
 
         public int Capacity { get; set; }
 

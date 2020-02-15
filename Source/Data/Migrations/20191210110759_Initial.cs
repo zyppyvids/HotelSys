@@ -12,6 +12,7 @@ namespace Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false).Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(nullable: false),
                     PasswordHash = table.Column<string>(nullable: false),
                     PersonalId = table.Column<string>(nullable: false),
                     FirstName = table.Column<string>(nullable: false),
