@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
-    [DbContext(typeof(MyLibraryDb))]
+    [DbContext(typeof(MyHotelDb))]
     [Migration("20191210110759_Initial")]
     partial class Initial
     {
