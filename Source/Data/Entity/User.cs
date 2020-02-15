@@ -8,9 +8,9 @@ namespace Data.Entity
 
         public string Username { get; set; }
 
-        public string PasswordHash { get; set; }
+        public string Password { get; set; }
 
-        public string PersonalId { get; set; }
+        public string PersonalID { get; set; }
 
         public string FirstName { get; set; }
 
@@ -22,7 +22,7 @@ namespace Data.Entity
 
         public string Email { get; set; }
 
-        public DateTime DateАppointment { get; set; }
+        public DateTime DateAppointment { get; set; }
 
         public bool Active { get; set; }
 
