@@ -1,0 +1,81 @@
+﻿@model Web.Models.Reservations.ReservationsIndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Номер на стая
+            </th>
+            <th>
+                Създал
+            </th>
+            <th>
+                Клиенти
+            </th>
+            <th>
+                Дата на настаняване
+            </th>
+            <th>
+                Дата на освобождаване
+            </th>
+            <th>
+                Включена закуска
+            </th>
+            <th>
+                All inclusive
+            </th>
+            <th>
+                Дължима сума
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RoomNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClientIds)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateAccomodation)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateRelease)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BreakfastIncluded)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AllInclusive)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentAmount)
+                </td>
+            </tr>
+        }
+    </tbody>
+    <ul class="pagination">
+        @for (var i = 1; i <= Model.Pager.PagesCount; i++)
+        {
+            <li class="page-item @(i == Model.Pager.CurrentPage ? "active" : "")">
+                <a asp-route-Pager.CurrentPage="@i" class="page-link">@i</a>
+            </li>
+        }
+    </ul>
+</table>

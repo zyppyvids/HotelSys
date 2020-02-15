@@ -1,4 +1,4 @@
-﻿@model Web.Models.Books.BooksIndexViewModel
+﻿@model Web.Models.Clients.ClientsIndexViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -13,18 +13,22 @@
     <thead>
         <tr>
             <th>
-                Author
+                ИД
             </th>
             <th>
-                Title
+                Собствено име
             </th>
             <th>
-                Price
-            <th>
-                ISBN
+                Фамилно име
             </th>
             <th>
-                Page count
+                Телефонен номер
+            </th>
+            <th>
+                Имейл
+            </th>
+            <th>
+                Възрастен
             </th>
             <th></th>
         </tr>
@@ -34,20 +38,22 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Author)
+                    @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Title)
+                    @Html.DisplayFor(modelItem => item.FirstName)
                 </td>
                 <td>
-                    <!--Instead of Price Title was shown in the View-->
-                    @Html.DisplayFor(modelItem => item.Price)
+                    @Html.DisplayFor(modelItem => item.LastName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ISBN)
+                    @Html.DisplayFor(modelItem => item.PhoneNumber)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Pages)
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Adult)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
