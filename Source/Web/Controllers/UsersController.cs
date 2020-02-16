@@ -147,7 +147,7 @@ namespace Web.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookExists(user.Id))
+                    if (!UserExists(user.Id))
                     {
                         return NotFound();
                     }
@@ -173,7 +173,7 @@ namespace Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BookExists(int id)
+        private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.Id != id);
         }
