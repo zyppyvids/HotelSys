@@ -1,9 +1,10 @@
-﻿using System;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Data.Entity
 {
     public class Client
     {
+        [Key]
         public int Id { get; set; }
 
         public string FirstName { get; set; }

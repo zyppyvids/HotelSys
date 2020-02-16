@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Data.Entity
 {
     public class User
     {
+        [Key]
         public int Id { get; set; }
 
         public string Username { get; set; }
