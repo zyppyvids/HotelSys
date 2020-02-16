@@ -53,9 +53,10 @@ namespace Data.Migrations
                 name: "Reservations",
                 columns: table => new
                 {
+                    Id = table.Column<int>(nullable: false).Annotation("SqlServer:Identity", "1, 1"),
                     RoomNumber = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
-                    ClientIds = table.Column<int[]>(nullable: false),
+                    ClientIds = table.Column<string>(nullable: false),
                     DateAccommodation = table.Column<DateTime>(nullable: false),
                     DateRelease = table.Column<DateTime>(nullable: false),
                     BreakfastIncluded = table.Column<bool>(nullable: false),
