@@ -10,7 +10,7 @@ namespace Web.Models.Reservations
 
         public int[] ClientsIds { get; set; }
 
-        public DateTime DateAccommodation { get; set; }
+        public DateTime DateAccomodation { get; set; }
 
         public DateTime DateRelease { get; set; }
 
