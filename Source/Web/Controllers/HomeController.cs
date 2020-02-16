@@ -6,7 +6,7 @@ namespace Web.Controllers
     {
         public IActionResult Index()
         {
-            return RedirectToAction("Index", "Books");
+            return RedirectToAction("Index", "Users");
         }
     }
 }
