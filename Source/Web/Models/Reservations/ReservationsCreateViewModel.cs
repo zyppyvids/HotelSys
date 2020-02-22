@@ -1,10 +1,14 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Web.Models.Reservations
 {
     public class ReservationsCreateViewModel
     {
+        [HiddenInput]
+        public int[] AvailableRooms { get; set; }
+
         [Required]
         public int RoomNumber { get; set; }
 

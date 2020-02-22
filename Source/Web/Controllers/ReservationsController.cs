@@ -49,7 +49,8 @@ namespace Web.Controllers
         public IActionResult Create()
         {
             ReservationsCreateViewModel model = new ReservationsCreateViewModel();
-
+            model.AvailableRooms = _context.Rooms.ToArray().Where(r => r.Free).Select(r => r.Number).ToArray();
+            
             return View(model);
         }
 
