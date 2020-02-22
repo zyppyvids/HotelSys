@@ -17,6 +17,7 @@ namespace Web.Models.Clients
         public string LastName { get; set; }
 
         [Required]
+        [RegularExpression(@"^[0-9]+$", ErrorMessage = "The phone number must contain only numbers")]
         [StringLength(10, ErrorMessage = "Phone number must be exactly 10 characters", MinimumLength = 10)]
         public string PhoneNumber { get; set; }
 
