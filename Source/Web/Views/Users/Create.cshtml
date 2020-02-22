@@ -1,12 +1,12 @@
 ﻿@model Web.Models.Users.UsersCreateViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Съзадаване";
 }
 
-<h1>Create</h1>
+<h1>Създаване</h1>
 
-<h4>User</h4>
+<h4>Потребител</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -49,7 +49,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="DateAppointment" class="control-label">Дата на назначаване</label>
-                <input asp-for="DateAppointment" class="form-control" />
+                <input asp-for="DateAppointment" class="form-control" type="date" value=""/>
                 <span asp-validation-for="DateAppointment" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -59,18 +59,18 @@
             </div>
             <div class="form-group">
                 <label asp-for="DateDismissal" class="control-label">Дата на освобождаване от длъжност</label>
-                <input type="datetime" asp-for="DateDismissal" class="form-control" />
+                <input asp-for="DateDismissal" class="form-control" type="date" value=""/>
                 <span asp-validation-for="DateDismissal" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Създай" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Към списъка</a>
 </div>
 
 @section Scripts {
