@@ -109,14 +109,12 @@ namespace Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                Client client = new Client
-                {
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    PhoneNumber = model.PhoneNumber,
-                    Email = model.Email,
-                    Adult = model.Adult
-                };
+                Client client = await _context.Clients.FindAsync(model.Id);
+                client.FirstName = model.FirstName;
+                client.LastName = model.LastName;
+                client.PhoneNumber = model.PhoneNumber;
+                client.Email = model.Email;
+                client.Adult = model.Adult;
 
                 try
                 {

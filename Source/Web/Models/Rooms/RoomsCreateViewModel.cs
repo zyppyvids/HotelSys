@@ -1,9 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Web.Models.Rooms
 {
     public class RoomsCreateViewModel
     {
+        [HiddenInput]
+        public int Id { get; set; }
+
         [Required]
         public int Number { get; set; }
 

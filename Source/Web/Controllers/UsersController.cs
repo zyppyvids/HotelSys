@@ -125,20 +125,18 @@ namespace Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = new User
-                {
-                    Username = model.Username,
-                    Password = GetPasswordHash(model.Password),
-                    FirstName = model.FirstName,
-                    MiddleName = model.MiddleName,
-                    LastName = model.LastName,
-                    PersonalID = model.PersonalID,
-                    PhoneNumber = model.PhoneNumber,
-                    Email = model.Email,
-                    DateAppointment = model.DateAppointment,
-                    Active = model.Active,
-                    DateDismissal = model.DateDismissal
-                };
+                User user = await _context.Users.FindAsync(model.Id);
+                user.Username = model.Username;
+                user.Password = GetPasswordHash(model.Password);
+                user.FirstName = model.FirstName;
+                user.MiddleName = model.MiddleName;
+                user.LastName = model.LastName;
+                user.PersonalID = model.PersonalID;
+                user.PhoneNumber = model.PhoneNumber;
+                user.Email = model.Email;
+                user.DateAppointment = model.DateAppointment;
+                user.Active = model.Active;
+                user.DateDismissal = model.DateDismissal;
 
                 try
                 {

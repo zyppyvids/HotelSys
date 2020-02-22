@@ -117,17 +117,16 @@ namespace Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                Reservation reservation = new Reservation
-                {
-                    RoomNumber = model.RoomNumber,
-                    UserId = model.UserId,
-                    ClientsIds = string.Join(", ", model.ClientsIds),
-                    DateAccomodation = model.DateAccomodation,
-                    DateRelease = model.DateRelease,
-                    BreakfastIncluded = model.BreakfastIncluded,
-                    AllInclusive = model.AllInclusive,
-                    PaymentAmount = model.PaymentAmount
-                };
+                Reservation reservation = await _context.Reservations.FindAsync(model.Id);
+
+                reservation.RoomNumber = model.RoomNumber;
+                reservation.UserId = model.UserId;
+                reservation.ClientsIds = string.Join(", ", model.ClientsIds);
+                reservation.DateAccomodation = model.DateAccomodation;
+                reservation.DateRelease = model.DateRelease;
+                reservation.BreakfastIncluded = model.BreakfastIncluded;
+                reservation.AllInclusive = model.AllInclusive;
+                reservation.PaymentAmount = model.PaymentAmount;
 
                 try
                 {

@@ -58,15 +58,14 @@ namespace Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                Room room = new Room
-                {
-                    Number = model.Number,
-                    Type = model.Type,
-                    Capacity = model.Capacity,
-                    Free = model.Free,
-                    BedPriceAdult = model.BedPriceAdult,
-                    BedPriceChild = model.BedPriceChild
-                };
+                Room room = await _context.Rooms.FindAsync(model.Id);
+
+                room.Number = model.Number;
+                room.Type = model.Type;
+                room.Capacity = model.Capacity;
+                room.Free = model.Free;
+                room.BedPriceAdult = model.BedPriceAdult;
+                room.BedPriceChild = model.BedPriceChild;
 
                 _context.Add(room);
                 await _context.SaveChangesAsync();
