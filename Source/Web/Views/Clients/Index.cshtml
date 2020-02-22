@@ -1,13 +1,13 @@
 ﻿@model Web.Models.Clients.ClientsIndexViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Списък";
 }
 
-<h1>Index</h1>
+<h1>Списък</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Добави нов клиент</a>
 </p>
 <table class="table">
     <thead>
@@ -28,7 +28,7 @@
                 Имейл
             </th>
             <th>
-                Възрастен
+                Пълнолетен
             </th>
             <th></th>
         </tr>
@@ -53,11 +53,11 @@
                     @Html.DisplayFor(modelItem => item.Email)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Adult)
+                    @(item.Adult ? "Да" : "Не")
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Промени</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Изтрий</a>
                 </td>
             </tr>
         }
