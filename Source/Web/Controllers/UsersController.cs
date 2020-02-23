@@ -38,6 +38,8 @@ namespace Web.Controllers
                 LastName = u.LastName,
                 PersonalID = u.PersonalID,
                 PhoneNumber = u.PhoneNumber,
+                DateAppointment = u.DateAppointment,
+                DateDismissal = u.DateDismissal,
                 Email = u.Email
             }).ToListAsync();
 
@@ -65,7 +67,7 @@ namespace Web.Controllers
                 User user = new User
                 {
                     Username = model.Username,
-                    Password = GetPasswordHash(model.Password),
+                    PasswordHash = GetPasswordHash(model.Password),
                     FirstName = model.FirstName,
                     MiddleName = model.MiddleName,
                     LastName = model.LastName,
@@ -77,7 +79,7 @@ namespace Web.Controllers
                     DateDismissal = model.DateDismissal
                 };
 
-                _context.Add(user);
+                _context.Users.Add(user);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
@@ -103,7 +105,7 @@ namespace Web.Controllers
             UsersEditViewModel model = new UsersEditViewModel
             {
                 Username = user.Username,
-                Password = GetPasswordHash(user.Password),
+                Password = GetPasswordHash(user.PasswordHash),
                 FirstName = user.FirstName,
                 MiddleName = user.MiddleName,
                 LastName = user.LastName,
@@ -127,7 +129,7 @@ namespace Web.Controllers
             {
                 User user = await _context.Users.FindAsync(model.Id);
                 user.Username = model.Username;
-                user.Password = GetPasswordHash(model.Password);
+                user.PasswordHash = GetPasswordHash(model.Password);
                 user.FirstName = model.FirstName;
                 user.MiddleName = model.MiddleName;
                 user.LastName = model.LastName;
