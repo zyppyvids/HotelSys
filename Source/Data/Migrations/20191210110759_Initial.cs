@@ -20,7 +20,7 @@ namespace Data.Migrations
                     LastName = table.Column<string>(nullable: false),
                     PhoneNumber = table.Column<string>(nullable: false),
                     Email = table.Column<string>(nullable: false),
-                    DateАppointment = table.Column<DateTime>(nullable: false),
+                    DateAppointment = table.Column<DateTime>(nullable: false),
                     Active = table.Column<bool>(nullable: false),
                     DateDismissal = table.Column<DateTime>(nullable: true)
                 });
@@ -56,8 +56,8 @@ namespace Data.Migrations
                     Id = table.Column<int>(nullable: false).Annotation("SqlServer:Identity", "1, 1"),
                     RoomNumber = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
-                    ClientIds = table.Column<string>(nullable: false),
-                    DateAccommodation = table.Column<DateTime>(nullable: false),
+                    ClientsIds = table.Column<string>(nullable: false),
+                    DateAccomodation = table.Column<DateTime>(nullable: false),
                     DateRelease = table.Column<DateTime>(nullable: false),
                     BreakfastIncluded = table.Column<bool>(nullable: false),
                     AllInclusive = table.Column<bool>(nullable: false),

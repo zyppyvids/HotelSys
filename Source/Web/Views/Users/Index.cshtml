@@ -1,19 +1,19 @@
 ﻿@model Web.Models.Users.UsersIndexViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Списък";
 }
 
-<h1>Index</h1>
+<h1>Списък</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Добави нов потребител</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                ИД
+                ID
             </th>
             <th>
                 Потребителско име
@@ -40,7 +40,7 @@
                 Дата на назначаване
             </th>
             <th>
-                Активен
+                Статус
             </th>
             <th>
                 Дата на освобождаване
@@ -80,14 +80,14 @@
                     @item.DateAppointment.ToShortDateString()
                 </td>
                 <td>
-                    @(item.Active ? "Yes" : "No")
+                    @(item.Active ? "Активен" : "Не активен")
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DateDismissal)
+                    @item.DateDismissal.ToShortDateString()
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Редактирай</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Изтрий</a>
                 </td>
             </tr>
         }

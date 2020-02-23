@@ -40,6 +40,7 @@ namespace Web.Controllers
                 PhoneNumber = u.PhoneNumber,
                 DateAppointment = u.DateAppointment,
                 DateDismissal = u.DateDismissal,
+                Active = u.Active,
                 Email = u.Email
             }).ToListAsync();
 
@@ -105,7 +106,6 @@ namespace Web.Controllers
             UsersEditViewModel model = new UsersEditViewModel
             {
                 Username = user.Username,
-                Password = GetPasswordHash(user.PasswordHash),
                 FirstName = user.FirstName,
                 MiddleName = user.MiddleName,
                 LastName = user.LastName,
@@ -129,7 +129,11 @@ namespace Web.Controllers
             {
                 User user = await _context.Users.FindAsync(model.Id);
                 user.Username = model.Username;
-                user.PasswordHash = GetPasswordHash(model.Password);
+
+                if (model.Password != null)
+                {
+                    user.PasswordHash = GetPasswordHash(model.Password);
+                }
                 user.FirstName = model.FirstName;
                 user.MiddleName = model.MiddleName;
                 user.LastName = model.LastName;
