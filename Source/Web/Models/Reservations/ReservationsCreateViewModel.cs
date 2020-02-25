@@ -7,15 +7,27 @@ namespace Web.Models.Reservations
     public class ReservationsCreateViewModel
     {
         [HiddenInput]
-        public int[] AvailableRooms { get; set; }
+        public int[] AllAvailableRooms { get; set; }
 
-        [Required]
+        [HiddenInput]
         public int RoomNumber { get; set; }
 
-        [Required]
+        [HiddenInput]
+        public string[] AllUsersNames { get; set; }
+
+        [HiddenInput]
+        public int[] AllUsersIds { get; set; }
+
+        [HiddenInput]
         public int UserId { get; set; }
 
-        [Required]
+        [HiddenInput]
+        public string[] AllClientsNames { get; set; }
+
+        [HiddenInput]
+        public int[] AllClientsIds { get; set; }
+
+        [HiddenInput]
         public int[] ClientsIds { get; set; }
 
         [Required]

@@ -27,17 +27,36 @@ namespace Web.Controllers
             model.Pager ??= new PagerViewModel();
             model.Pager.CurrentPage = model.Pager.CurrentPage <= 0 ? 1 : model.Pager.CurrentPage;
 
-            List<ReservationsViewModel> items = await _context.Reservations.Skip((model.Pager.CurrentPage - 1) * PageSize).Take(PageSize).Select(r => new ReservationsViewModel()
+            List<ReservationsViewModel> items = new List<ReservationsViewModel>();
+
+            foreach(Reservation r in _context.Reservations.ToArray().Skip((model.Pager.CurrentPage - 1) * PageSize).Take(PageSize))
             {
-                RoomNumber = r.RoomNumber,
-                UserId = r.UserId,
-                ClientsIds = r.ClientsIds.Split(", ", StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToArray(),
-                DateAccomodation = r.DateAccomodation,
-                DateRelease = r.DateRelease,
-                BreakfastIncluded = r.BreakfastIncluded,
-                AllInclusive = r.AllInclusive,
-                PaymentAmount = r.PaymentAmount
-            }).ToListAsync();
+                ReservationsViewModel item = new ReservationsViewModel();
+                item.Id = r.Id;
+                item.RoomNumber = r.RoomNumber;
+                User user = _context.Users.ToArray().Where(u => u.Id == r.UserId).FirstOrDefault();
+                item.UserName = user != null ? user.FirstName + " " + user.LastName : "Unknown";
+
+                List<string> clientsNames = new List<string>();
+                foreach(int i in r.ClientsIds.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(c => int.Parse(c)))
+                {
+                    Client client = _context.Clients.ToArray().Where(c => c.Id == i).FirstOrDefault();
+
+                    if (client != null)
+                    {
+                        clientsNames.Add(client.FirstName + " " + client.LastName);
+                    }
+                }
+
+                item.ClientsNames = clientsNames.ToArray();
+                item.DateAccomodation = r.DateAccomodation.ToShortDateString();
+                item.DateRelease = r.DateRelease.ToShortDateString();
+                item.BreakfastIncluded = r.BreakfastIncluded;
+                item.AllInclusive = r.AllInclusive;
+                item.PaymentAmount = r.PaymentAmount;
+
+                items.Add(item);
+            }
 
             model.Items = items;
             model.Pager.PagesCount = (int)Math.Ceiling(await _context.Reservations.CountAsync() / (double)PageSize);
@@ -45,13 +64,27 @@ namespace Web.Controllers
             return View(model);
         }
 
+        private ReservationsCreateViewModel GenerateReservationCraeteViewModel(ReservationsCreateViewModel model = null)
+        {
+            if(model == null)
+            {
+                model = new ReservationsCreateViewModel();
+            }
+            model.AllAvailableRooms = _context.Rooms.ToArray().Select(r => r.Number).ToArray();
+
+            model.AllUsersNames = _context.Users.ToArray().Select(user => user.FirstName + " " + user.LastName).ToArray();
+            model.AllUsersIds = _context.Users.ToArray().Select(user => user.Id).ToArray();
+
+            model.AllClientsNames = _context.Clients.ToArray().Select(client => client.FirstName + " " + client.LastName).ToArray();
+            model.AllClientsIds = _context.Clients.ToArray().Select(client => client.Id).ToArray();
+
+            return model;
+        }
+
         // GET: Reservations/Create
         public IActionResult Create()
         {
-            ReservationsCreateViewModel model = new ReservationsCreateViewModel();
-            model.AvailableRooms = _context.Rooms.ToArray().Where(r => r.Free).Select(r => r.Number).ToArray();
-            
-            return View(model);
+            return View(GenerateReservationCraeteViewModel());
         }
 
         // POST: Reservations/Create
@@ -65,7 +98,7 @@ namespace Web.Controllers
                 {
                     RoomNumber = model.RoomNumber,
                     UserId = model.UserId,
-                    ClientsIds = string.Join(", ", model.ClientsIds),
+                    ClientsIds = string.Join(",", model.ClientsIds),
                     DateAccomodation = model.DateAccomodation,
                     DateRelease = model.DateRelease,
                     BreakfastIncluded = model.BreakfastIncluded,
@@ -73,13 +106,30 @@ namespace Web.Controllers
                     PaymentAmount = model.PaymentAmount
                 };
 
-                _context.Add(reservation);
+                _context.Reservations.Add(reservation);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(model);
+            return View(GenerateReservationCraeteViewModel(model));
+        }
+
+        private ReservationsEditViewModel GenerateReservationEditViewModel(ReservationsEditViewModel model = null)
+        {
+            if (model == null)
+            {
+                model = new ReservationsEditViewModel();
+            }
+            model.AllAvailableRooms = _context.Rooms.ToArray().Select(r => r.Number).ToArray();
+
+            model.AllUsersNames = _context.Users.ToArray().Select(user => user.FirstName + " " + user.LastName).ToArray();
+            model.AllUsersIds = _context.Users.ToArray().Select(user => user.Id).ToArray();
+
+            model.AllClientsNames = _context.Clients.ToArray().Select(client => client.FirstName + " " + client.LastName).ToArray();
+            model.AllClientsIds = _context.Clients.ToArray().Select(client => client.Id).ToArray();
+
+            return model;
         }
 
         // GET: Reservations/Edit/id
@@ -96,19 +146,17 @@ namespace Web.Controllers
                 return NotFound();
             }
 
-            ReservationsEditViewModel model = new ReservationsEditViewModel
-            {
-                RoomNumber = reservation.RoomNumber,
-                UserId = reservation.UserId,
-                ClientsIds = reservation.ClientsIds.Split(", ", StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToArray(),
-                DateAccomodation = reservation.DateAccomodation,
-                DateRelease = reservation.DateRelease,
-                BreakfastIncluded = reservation.BreakfastIncluded,
-                AllInclusive = reservation.AllInclusive,
-                PaymentAmount = reservation.PaymentAmount
-            };
+            ReservationsEditViewModel model = new ReservationsEditViewModel();
+            model.RoomNumber = reservation.RoomNumber;
+            model.UserId = reservation.UserId;
+            model.ClientsIds = reservation.ClientsIds.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(i => int.Parse(i)).ToArray();
+            model.DateAccomodation = reservation.DateAccomodation;
+            model.DateRelease = reservation.DateRelease;
+            model.BreakfastIncluded = reservation.BreakfastIncluded;
+            model.AllInclusive = reservation.AllInclusive;
+            model.PaymentAmount = reservation.PaymentAmount;
 
-            return View(model);
+            return View(GenerateReservationEditViewModel(model));
         }
 
         // POST: Reservations/Edit/5
@@ -118,20 +166,21 @@ namespace Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                Reservation reservation = await _context.Reservations.FindAsync(model.Id);
-
-                reservation.RoomNumber = model.RoomNumber;
-                reservation.UserId = model.UserId;
-                reservation.ClientsIds = string.Join(", ", model.ClientsIds);
-                reservation.DateAccomodation = model.DateAccomodation;
-                reservation.DateRelease = model.DateRelease;
-                reservation.BreakfastIncluded = model.BreakfastIncluded;
-                reservation.AllInclusive = model.AllInclusive;
-                reservation.PaymentAmount = model.PaymentAmount;
+                Reservation reservation = new Reservation
+                {
+                    RoomNumber = model.RoomNumber,
+                    UserId = model.UserId,
+                    ClientsIds = string.Join(",", model.ClientsIds),
+                    DateAccomodation = model.DateAccomodation,
+                    DateRelease = model.DateRelease,
+                    BreakfastIncluded = model.BreakfastIncluded,
+                    AllInclusive = model.AllInclusive,
+                    PaymentAmount = model.PaymentAmount
+                };
 
                 try
                 {
-                    _context.Update(reservation);
+                    _context.Reservations.Update(reservation);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -142,7 +191,7 @@ namespace Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(model);
+            return View(GenerateReservationEditViewModel(model));
         }
 
         // GET: Reservations/Delete/id

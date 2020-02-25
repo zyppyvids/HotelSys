@@ -9,13 +9,28 @@ namespace Web.Models.Reservations
         [HiddenInput]
         public int Id { get; set; }
 
-        [Required]
+        [HiddenInput]
+        public int[] AllAvailableRooms { get; set; }
+
+        [HiddenInput]
         public int RoomNumber { get; set; }
 
-        [Required]
+        [HiddenInput]
+        public string[] AllUsersNames { get; set; }
+
+        [HiddenInput]
+        public int[] AllUsersIds { get; set; }
+
+        [HiddenInput]
         public int UserId { get; set; }
 
-        [Required]
+        [HiddenInput]
+        public string[] AllClientsNames { get; set; }
+
+        [HiddenInput]
+        public int[] AllClientsIds { get; set; }
+
+        [HiddenInput]
         public int[] ClientsIds { get; set; }
 
         [Required]

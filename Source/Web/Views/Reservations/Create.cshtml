@@ -1,71 +1,81 @@
 ﻿@model Web.Models.Reservations.ReservationsCreateViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Съзадаване";
 }
 
-<h1>Create</h1>
+<h1>Съзадаване</h1>
 
-<h4>Reservation</h4>
+<h4>Резервация</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="RoomNumber" class="control-label"></label>
+                <label asp-for="RoomNumber" class="control-label">Номер на стая</label>
                 <select asp-for="RoomNumber" class="form-control">
-                    @foreach(int roomNumber in Model.AvailableRooms)
+                    @foreach(int rn in Model.AllAvailableRooms)
                     {
-                        <option value=@roomNumber>@roomNumber</option>
+                        <option value=@rn>@rn</option>
                     }
                 </select>
                 <span asp-validation-for="RoomNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
+                <label asp-for="UserId" class="control-label">Потребител</label>
+                <select asp-for="UserId" class="form-control">
+                    @for(int i = 0; i < Model.AllUsersNames.Length; i++ )
+                    {
+                        <option value=@Model.AllUsersIds[i]>@Model.AllUsersNames[i]</option>
+                    }
+                </select>
                 <span asp-validation-for="UserId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ClientsIds" class="control-label"></label>
-                <input asp-for="ClientsIds" class="form-control" />
+                <label asp-for="ClientsIds" class="control-label">Клиенти</label>
+                <select asp-for="ClientsIds" class="form-control">
+                    @for (int i = Model.AllClientsNames.Length - 1; i >= 0; i--)
+                    {
+                        <option value=@Model.AllClientsIds[i]>@Model.AllClientsNames[i]</option>
+                    }
+                </select>
                 <span asp-validation-for="ClientsIds" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DateAccomodation" class="control-label"></label>
-                <input asp-for="DateAccomodation" class="form-control" />
+                <label asp-for="DateAccomodation" class="control-label">Дата на настаняване</label>
+                <input asp-for="DateAccomodation" class="form-control" type="date"/>
                 <span asp-validation-for="DateAccomodation" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DateRelease" class="control-label"></label>
-                <input asp-for="DateRelease" class="form-control" />
+                <label asp-for="DateRelease" class="control-label">Дата на напускане</label>
+                <input asp-for="DateRelease" class="form-control" type="date"/>
                 <span asp-validation-for="DateRelease" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BreakfastIncluded" class="control-label"></label>
+                <label asp-for="BreakfastIncluded" class="control-label">Включена закуска</label>
                 <input asp-for="BreakfastIncluded" class="form-control" />
                 <span asp-validation-for="BreakfastIncluded" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AllInclusive" class="control-label"></label>
+                <label asp-for="AllInclusive" class="control-label">All Inclusive</label>
                 <input asp-for="AllInclusive" class="form-control" />
                 <span asp-validation-for="AllInclusive" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PaymentAmount" class="control-label"></label>
+                <label asp-for="PaymentAmount" class="control-label">Дължима сума</label>
                 <input asp-for="PaymentAmount" class="form-control" />
                 <span asp-validation-for="PaymentAmount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Създай" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Към списъка</a>
 </div>
 
 @section Scripts {
