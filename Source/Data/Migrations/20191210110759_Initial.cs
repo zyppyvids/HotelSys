@@ -34,14 +34,15 @@ namespace Data.Migrations
                     LastName = table.Column<string>(nullable: false),
                     PhoneNumber = table.Column<string>(nullable: false),
                     Email = table.Column<string>(nullable: false),
-                    Аdult = table.Column<bool>(nullable: false)
+                    Adult = table.Column<bool>(nullable: false)
                 });
 
             migrationBuilder.CreateTable(
                 name: "Rooms",
                 columns: table => new
                 {
-                    Number = table.Column<int>(nullable: false).Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(nullable: false).Annotation("SqlServer:Identity", "1, 1"),
+                    Number = table.Column<int>(nullable: false),
                     Type = table.Column<string>(nullable: false),
                     Capacity = table.Column<int>(nullable: false),
                     Free = table.Column<bool>(nullable: false),
