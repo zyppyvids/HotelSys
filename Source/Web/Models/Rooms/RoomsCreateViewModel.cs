@@ -5,9 +5,6 @@ namespace Web.Models.Rooms
 {
     public class RoomsCreateViewModel
     {
-        [HiddenInput]
-        public int Id { get; set; }
-
         [Required]
         public int Number { get; set; }
 

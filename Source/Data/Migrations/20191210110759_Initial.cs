@@ -41,8 +41,7 @@ namespace Data.Migrations
                 name: "Rooms",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false).Annotation("SqlServer:Identity", "1, 1"),
-                    Number = table.Column<int>(nullable: false),
+                    Number = table.Column<int>(nullable: false).Annotation("SqlServer:Identity", "1, 1"),
                     Type = table.Column<string>(nullable: false),
                     Capacity = table.Column<int>(nullable: false),
                     Free = table.Column<bool>(nullable: false),

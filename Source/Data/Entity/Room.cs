@@ -4,8 +4,7 @@ namespace Data.Entity
 {
     public class Room
     {
-        public int Id { get; set; }
-
+        [Key]
         public int Number { get; set; }
 
         public string Type { get; set; }

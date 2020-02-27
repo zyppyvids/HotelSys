@@ -86,14 +86,14 @@ namespace Web.Controllers
         }
 
         // GET: Rooms/Edit/id
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? roomnumber)
         {
-            if (id == null)
+            if (roomnumber == null)
             {
                 return NotFound();
             }
 
-            Room room = await _context.Rooms.FindAsync(id);
+            Room room = await _context.Rooms.FindAsync(roomnumber);
             if (room == null)
             {
                 return NotFound();
@@ -146,9 +146,9 @@ namespace Web.Controllers
         }
 
         // GET: Rooms/Delete/id
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int roomnumber)
         {
-            Room room = await _context.Rooms.FindAsync(id);
+            Room room = await _context.Rooms.FindAsync(roomnumber);
             _context.Rooms.Remove(room);
             await _context.SaveChangesAsync();
 
