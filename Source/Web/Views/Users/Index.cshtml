@@ -107,7 +107,14 @@
                         @(item.Active ? "✓" : "✘")
                     </td>
                     <td>
-                        @item.DateDismissal.ToShortDateString()
+                        @if (item.DateDismissal.HasValue)
+                        {
+                            @item.DateDismissal.Value.ToShortDateString()
+                        }
+                        else
+                        {
+                            <div>None</div>
+                        }
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id">EDIT</a>

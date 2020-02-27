@@ -26,6 +26,6 @@ namespace Web.Models.Users
 
         public bool Active { get; set; }
 
-        public DateTime DateDismissal { get; set; }
+        public DateTime? DateDismissal { get; set; }
     }
 }
