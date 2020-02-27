@@ -36,6 +36,9 @@ namespace Web.Controllers
 
             model.Pager.PagesCount = (int)Math.Ceiling((double)_context.Reservations.ToArray().Length / (double)model.Pager.PageSize);
 
+            value = StringValues.Empty;
+            Request.Query.TryGetValue("clientid", out value);
+
             List<ReservationsViewModel> items = new List<ReservationsViewModel>();
 
             foreach(Reservation r in _context.Reservations.ToArray().Skip((model.Pager.CurrentPage - 1) * model.Pager.PageSize).Take(model.Pager.PageSize))
@@ -47,7 +50,17 @@ namespace Web.Controllers
                 item.UserName = user != null ? user.FirstName + " " + user.LastName : "Unknown";
 
                 List<string> clientsNames = new List<string>();
-                foreach(int i in r.ClientsIds.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(c => int.Parse(c)))
+                int[] clientIds = r.ClientsIds.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(c => int.Parse(c)).ToArray();
+
+                if(!StringValues.IsNullOrEmpty(value))
+                {
+                    if(!clientIds.Contains(int.Parse(value)))
+                    {
+                        continue;
+                    }
+                }
+
+                foreach (int i in clientIds)
                 {
                     Client client = _context.Clients.ToArray().Where(c => c.Id == i).FirstOrDefault();
 
@@ -67,6 +80,7 @@ namespace Web.Controllers
                 items.Add(item);
             }
 
+            
             model.Items = items;
 
             return View(model);

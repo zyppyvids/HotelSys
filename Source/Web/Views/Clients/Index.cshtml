@@ -97,6 +97,7 @@
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id">EDIT</a>
                         <a asp-action="Delete" asp-route-id="@item.Id">DELETE</a>
+                        <a href="/Reservations?clientid=@item.Id">VIEW</a>
                     </td>
                 </tr>
             }
