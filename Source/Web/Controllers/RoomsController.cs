@@ -15,7 +15,6 @@ namespace Web.Controllers
     public class RoomsController : Controller
     {
         private readonly MyHotelDb _context;
-        private const int PageSize = 10;
 
         public RoomsController()
         {
@@ -37,7 +36,7 @@ namespace Web.Controllers
 
             model.Pager.PagesCount = (int)Math.Ceiling((double)_context.Rooms.ToArray().Length / (double)model.Pager.PageSize);
 
-            List<RoomsViewModel> items = await _context.Rooms.Skip((model.Pager.CurrentPage - 1) * PageSize).Take(PageSize).Select(r => new RoomsViewModel()
+            List<RoomsViewModel> items = await _context.Rooms.Skip((model.Pager.CurrentPage - 1) * model.Pager.PageSize).Take(model.Pager.PageSize).Select(r => new RoomsViewModel()
             {
                 Number = r.Number,
                 Type = r.Type,
