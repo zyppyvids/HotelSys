@@ -19,26 +19,42 @@
         }
     </ul>
 
-    <select onchange="changePageSize(this);">
-        @foreach (int size in Model.Pager.PageSizes)
-        {
-            if (Model.Pager.PageSize == size)
+    <div>Elements:
+        <select onchange="changePageSize(this);">
+            @foreach (int size in Model.Pager.PageSizes)
             {
-                <option value=@size selected>@size</option>
-            }
-            else
-            {
-                <option value=@size>@size</option>
-            }
+                if (Model.Pager.PageSize == size)
+                {
+                    <option value=@size selected>@size</option>
+                }
+                else
+                {
+                    <option value=@size>@size</option>
+                }
 
-        }
-    </select>
+            }
+        </select>
+    </div>
+
+    <div>SortBy:
+        <select onchange="changeFilter(this, @(Model.Sorts.Length - 1))">
+            @for (int i = 0; i < Model.Sorts.Length; i++)
+            {
+                if (Model.CurrentSort == i)
+                {
+                    <option value="@i" selected>@Model.Sorts[i]</option>
+                }
+                else
+                {
+                    <option value="@i">@Model.Sorts[i]</option>
+                }
+            }
+        </select>
+    </div>
+
     <table class="table">
         <thead>
             <tr>
-                <th>
-                    ID
-                </th>
                 <th>
                     USERNAME
                 </th>
@@ -76,9 +92,6 @@
             @foreach (var item in Model.Items)
             {
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Id)
-                    </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Username)
                     </td>
@@ -144,6 +157,17 @@
             url.searchParams.set("pagesize", obj.value);
         } else {
             url.searchParams.append("pagesize", obj.value);
+        }
+
+        window.location.href = url;
+    }
+
+    function changeFilter(obj, max) {
+        var url = new URL(window.location.href);
+        if (url.searchParams.has("sort")) {
+            url.searchParams.set("sort", obj.value);
+        } else {
+            url.searchParams.append("sort", obj.value);
         }
 
         window.location.href = url;
