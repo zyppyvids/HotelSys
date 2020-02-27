@@ -19,7 +19,8 @@
         }
     </ul>
 
-    <div>Elements:
+    <div>
+        Elements:
         <select onchange="changePageSize(this);">
             @foreach (int size in Model.Pager.PageSizes)
             {
@@ -36,8 +37,9 @@
         </select>
     </div>
 
-    <div>SortBy:
-        <select onchange="changeFilter(this, @(Model.Sorts.Length - 1))">
+    <div>
+        SortBy:
+        <select onchange="changeSort(this, @(Model.Sorts.Length - 1))">
             @for (int i = 0; i < Model.Sorts.Length; i++)
             {
                 if (Model.CurrentSort == i)
@@ -162,7 +164,7 @@
         window.location.href = url;
     }
 
-    function changeFilter(obj, max) {
+    function changeSort(obj, max) {
         var url = new URL(window.location.href);
         if (url.searchParams.has("sort")) {
             url.searchParams.set("sort", obj.value);

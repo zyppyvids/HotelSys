@@ -36,6 +36,10 @@ namespace Web.Controllers
 
             model.Pager.PagesCount = (int)Math.Ceiling((double)_context.Clients.ToArray().Length / (double)model.Pager.PageSize);
 
+            value = StringValues.Empty;
+            Request.Query.TryGetValue("sort", out value);
+            model.CurrentSort = StringValues.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+
             List<ClientsViewModel> items = await _context.Clients.Skip((model.Pager.CurrentPage - 1) * model.Pager.PageSize).Take(model.Pager.PageSize).Select(c => new ClientsViewModel()
             {
                 Id = c.Id,
@@ -46,7 +50,16 @@ namespace Web.Controllers
                 Adult = c.Adult
             }).ToListAsync();
 
-            model.Items = items;
+            switch(model.CurrentSort)
+            {
+                case 1: //FamilyName
+                    model.Items = items.OrderBy(i => i.LastName).ToList();
+                    break;
+
+                default://FirstName
+                    model.Items = items.OrderBy(i => i.FirstName).ToList();
+                    break;
+            }
 
             return View(model);
         }
