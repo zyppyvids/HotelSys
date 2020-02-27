@@ -10,6 +10,7 @@ using Web.Models.Users;
 using Web.Models.Shared;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Primitives;
 
 namespace Web.Controllers
 {
@@ -27,7 +28,16 @@ namespace Web.Controllers
         public async Task<IActionResult> Index(UsersIndexViewModel model)
         {
             model.Pager ??= new PagerViewModel();
-            model.Pager.CurrentPage = model.Pager.CurrentPage <= 0 ? 1 : model.Pager.CurrentPage;
+
+            StringValues page = StringValues.Empty;
+            Request.Query.TryGetValue("page", out page);
+            model.Pager.CurrentPage = StringValues.IsNullOrEmpty(page) ? 1 : int.Parse(page);
+
+            StringValues pagesize = StringValues.Empty;
+            Request.Query.TryGetValue("pagesize", out pagesize);
+            model.Pager.PageSize = StringValues.IsNullOrEmpty(pagesize) ? 10 : int.Parse(pagesize);
+
+            model.Pager.PagesCount = (int)Math.Ceiling((double)_context.Users.ToArray().Length / (double)model.Pager.PageSize);
 
             List<UsersViewModel> items = await _context.Users.Skip((model.Pager.CurrentPage - 1) * PageSize).Take(PageSize).Select(u => new UsersViewModel()
             {
@@ -45,7 +55,6 @@ namespace Web.Controllers
             }).ToListAsync();
 
             model.Items = items;
-            model.Pager.PagesCount = (int)Math.Ceiling(await _context.Users.CountAsync() / (double)PageSize);
 
             return View(model);
         }

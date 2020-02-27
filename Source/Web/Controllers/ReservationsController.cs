@@ -8,13 +8,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Web.Models.Reservations;
 using Web.Models.Shared;
+using Microsoft.Extensions.Primitives;
 
 namespace Web.Controllers
 {
     public class ReservationsController : Controller
     {
         private readonly MyHotelDb _context;
-        private const int PageSize = 10;
 
         public ReservationsController()
         {
@@ -25,11 +25,20 @@ namespace Web.Controllers
         public async Task<IActionResult> Index(ReservationsIndexViewModel model)
         {
             model.Pager ??= new PagerViewModel();
-            model.Pager.CurrentPage = model.Pager.CurrentPage <= 0 ? 1 : model.Pager.CurrentPage;
+
+            StringValues page = StringValues.Empty;
+            Request.Query.TryGetValue("page", out page);
+            model.Pager.CurrentPage = StringValues.IsNullOrEmpty(page) ? 1 : int.Parse(page);
+
+            StringValues pagesize = StringValues.Empty;
+            Request.Query.TryGetValue("pagesize", out pagesize);
+            model.Pager.PageSize = StringValues.IsNullOrEmpty(pagesize) ? 10 : int.Parse(pagesize);
+
+            model.Pager.PagesCount = (int)Math.Ceiling((double)_context.Reservations.ToArray().Length / (double)model.Pager.PageSize);
 
             List<ReservationsViewModel> items = new List<ReservationsViewModel>();
 
-            foreach(Reservation r in _context.Reservations.ToArray().Skip((model.Pager.CurrentPage - 1) * PageSize).Take(PageSize))
+            foreach(Reservation r in _context.Reservations.ToArray().Skip((model.Pager.CurrentPage - 1) * model.Pager.PageSize).Take(model.Pager.PageSize))
             {
                 ReservationsViewModel item = new ReservationsViewModel();
                 item.Id = r.Id;
@@ -59,7 +68,6 @@ namespace Web.Controllers
             }
 
             model.Items = items;
-            model.Pager.PagesCount = (int)Math.Ceiling(await _context.Reservations.CountAsync() / (double)PageSize);
 
             return View(model);
         }

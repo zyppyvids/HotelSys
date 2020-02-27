@@ -2,6 +2,7 @@
 using Data.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,16 @@ namespace Web.Controllers
         public async Task<IActionResult> Index(RoomsIndexViewModel model)
         {
             model.Pager ??= new PagerViewModel();
-            model.Pager.CurrentPage = model.Pager.CurrentPage <= 0 ? 1 : model.Pager.CurrentPage;
+
+            StringValues page = StringValues.Empty;
+            Request.Query.TryGetValue("page", out page);
+            model.Pager.CurrentPage = StringValues.IsNullOrEmpty(page) ? 1 : int.Parse(page);
+
+            StringValues pagesize = StringValues.Empty;
+            Request.Query.TryGetValue("pagesize", out pagesize);
+            model.Pager.PageSize = StringValues.IsNullOrEmpty(pagesize) ? 10 : int.Parse(pagesize);
+
+            model.Pager.PagesCount = (int)Math.Ceiling((double)_context.Rooms.ToArray().Length / (double)model.Pager.PageSize);
 
             List<RoomsViewModel> items = await _context.Rooms.Skip((model.Pager.CurrentPage - 1) * PageSize).Take(PageSize).Select(r => new RoomsViewModel()
             {
@@ -38,7 +48,6 @@ namespace Web.Controllers
             }).ToListAsync();
 
             model.Items = items;
-            model.Pager.PagesCount = (int)Math.Ceiling(await _context.Rooms.CountAsync() / (double)PageSize);
 
             return View(model);
         }

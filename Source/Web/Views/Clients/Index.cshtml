@@ -10,6 +10,29 @@
     <a asp-action="Create">Add a Client</a>
 </p>
 <div class="table-responsive">
+    <ul class="pagination">
+        @for (var i = 1; i <= Model.Pager.PagesCount; i++)
+        {
+            <li class="page-item @(i == Model.Pager.CurrentPage ? "active" : "")">
+                <a onclick="changePage(@i)" class="page-link">@i</a>
+            </li>
+        }
+    </ul>
+
+    <select onchange="changePageSize(this);">
+        @foreach (int size in Model.Pager.PageSizes)
+        {
+            if (Model.Pager.PageSize == size)
+            {
+                <option value=@size selected>@size</option>
+            }
+            else
+            {
+                <option value=@size>@size</option>
+            }
+
+        }
+    </select>
     <table class="table">
         <thead>
             <tr>
@@ -63,13 +86,29 @@
                 </tr>
             }
         </tbody>
-        <ul class="pagination">
-            @for (var i = 1; i <= Model.Pager.PagesCount; i++)
-            {
-                <li class="page-item @(i == Model.Pager.CurrentPage ? "active" : "")">
-                    <a asp-route-Pager.CurrentPage="@i" class="page-link">@i</a>
-                </li>
-            }
-        </ul>
     </table>
 </div>
+
+<script>
+    function changePage(num) {
+        var url = new URL(window.location.href);
+        if (url.searchParams.has("page")) {
+            url.searchParams.set("page", num);
+        } else {
+            url.searchParams.append("page", num);
+        }
+
+        window.location.href = url;
+    }
+
+    function changePageSize(obj) {
+        var url = new URL(window.location.href);
+        if (url.searchParams.has("pagesize")) {
+            url.searchParams.set("pagesize", obj.value);
+        } else {
+            url.searchParams.append("pagesize", obj.value);
+        }
+
+        window.location.href = url;
+    }
+</script>
