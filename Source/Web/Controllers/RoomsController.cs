@@ -26,13 +26,13 @@ namespace Web.Controllers
         {
             model.Pager ??= new PagerViewModel();
 
-            StringValues page = StringValues.Empty;
-            Request.Query.TryGetValue("page", out page);
-            model.Pager.CurrentPage = StringValues.IsNullOrEmpty(page) ? 1 : int.Parse(page);
+            StringValues value = StringValues.Empty;
+            Request.Query.TryGetValue("page", out value);
+            model.Pager.CurrentPage = StringValues.IsNullOrEmpty(value) ? 1 : int.Parse(value);
 
-            StringValues pagesize = StringValues.Empty;
-            Request.Query.TryGetValue("pagesize", out pagesize);
-            model.Pager.PageSize = StringValues.IsNullOrEmpty(pagesize) ? 10 : int.Parse(pagesize);
+            value = StringValues.Empty;
+            Request.Query.TryGetValue("pagesize", out value);
+            model.Pager.PageSize = StringValues.IsNullOrEmpty(value) ? 10 : int.Parse(value);
 
             model.Pager.PagesCount = (int)Math.Ceiling((double)_context.Rooms.ToArray().Length / (double)model.Pager.PageSize);
 
