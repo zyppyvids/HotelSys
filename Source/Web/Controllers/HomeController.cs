@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Data;
 using Data.Entity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models.Home;
 
@@ -33,22 +34,30 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(LoginViewModel model)
         {
-            User user = _context.Users.ToArray().Where(u => u.Username == model.Username).FirstOrDefault();
-            if(user != null)
+            if (GetCookie("LoggedIn") == "true")
             {
-                if(user.PasswordHash == GetPasswordHash(model.PasswordHash))
-                {
-                    return Redirect("/Users");
-                }
-                else
-                {
-                    ModelState.AddModelError("PasswordHash", "Password does not match!");
-                    return View(model);
-                }
+                return Redirect("/Users");
             }
+            else
+            {
+                User user = _context.Users.ToArray().Where(u => u.Username == model.Username).FirstOrDefault();
+                if (user != null)
+                {
+                    if (user.PasswordHash == GetPasswordHash(model.PasswordHash))
+                    {
+                        SetCookie("LoggedIn", "true");
+                        return Redirect("/Users");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("PasswordHash", "Password does not match!");
+                        return View(model);
+                    }
+                }
 
-            ModelState.AddModelError("Username", "User with that username does not exist!");
-            return View(model);
+                ModelState.AddModelError("Username", "User with that username does not exist!");
+                return View(model);
+            }
         }
 
         private string GetPasswordHash(string rawData)
@@ -67,6 +76,39 @@ namespace Web.Controllers
                 }
                 return builder.ToString();
             }
+        }
+
+        private string GetCookie(string key)
+        {
+            try
+            {
+                return Request.Cookies[key];
+            }
+            catch (KeyNotFoundException)
+            {
+                return "false";
+            }
+        }
+
+        private void SetCookie(string key, string value, int? expireTime = null)
+        {
+            CookieOptions option = new CookieOptions();
+
+            if (expireTime.HasValue)
+            {
+                option.Expires = DateTime.Now.AddMinutes(expireTime.Value);
+
+                Response.Cookies.Append(key, value, option);
+            }
+            else
+            {
+                Response.Cookies.Append(key, value);
+            }
+        }
+
+        private void RemoveCookie(string key)
+        {
+            Response.Cookies.Delete(key);
         }
     }
 }
