@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Data;
+using Data.Entity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Data;
-using Data.Entity;
-using Web.Models.Users;
-using Web.Models.Shared;
+using Microsoft.Extensions.Primitives;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.Extensions.Primitives;
-using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+using Web.Models.Shared;
+using Web.Models.Users;
 
 namespace Web.Controllers
 {

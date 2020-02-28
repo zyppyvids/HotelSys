@@ -1,15 +1,15 @@
 ﻿using Data;
 using Data.Entity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Models.Reservations;
 using Web.Models.Shared;
-using Microsoft.Extensions.Primitives;
-using Microsoft.AspNetCore.Http;
 
 namespace Web.Controllers
 {
@@ -96,7 +96,7 @@ namespace Web.Controllers
 
         private ReservationsCreateViewModel GenerateReservationCraeteViewModel(ReservationsCreateViewModel model = null)
         {
-            if(model == null)
+            if (model == null)
             {
                 model = new ReservationsCreateViewModel();
             }
