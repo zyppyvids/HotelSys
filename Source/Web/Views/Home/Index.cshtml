@@ -1,0 +1,32 @@
+﻿@model Web.Models.Home.HomeIndexViewModel
+
+<div class="login_box">
+    <div class="login_bar">
+        <h4 class="login_header">
+            Здравейте
+        </h4>
+    </div>
+    <div>
+        <form asp-action="Login" class="login_form">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Потребителско име</label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Парола</label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <a class="btn btn-primary" asp-action="Login">Влез</a>
+            </div>
+        </form>
+        <div class="form-group register_button">
+            <h6>Нямате Акаунт?</h6>
+            <a class="btn btn-primary" asp-action="Register">Регистрация</a>
+        </div>
+    </div>
+</div>
+

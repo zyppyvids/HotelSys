@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Web.Models.Home;
 
 namespace Web.Controllers
 {
@@ -6,7 +11,19 @@ namespace Web.Controllers
     {
         public IActionResult Index()
         {
-            return RedirectToAction("Index", "Users");
+            return View();
+        }
+
+        public async Task<IActionResult> Login(HomeIndexViewModel model)
+        {
+            //Login 
+            return View(model);
+        }
+
+        public async Task<IActionResult> Register(HomeIndexViewModel model)
+        {
+            //Register
+            return View(model);
         }
     }
 }
