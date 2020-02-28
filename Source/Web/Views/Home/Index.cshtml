@@ -5,26 +5,51 @@
 }
 
 <div>
-    <form style="left: 50%; top: 70%; position: absolute; margin-left: -25%; margin-top: -25%; width:40%" asp-action="Index" class="login_form">
-        <div style="border:double; border-width: 3px; border-radius: 20px; background-color: #fff; border-color: #000000">
+    <form asp-action="Index" class="login_form">
+        <div class="login_menu">
             <h1>LOGIN</h1>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group" style="margin-left: 20%; margin-right: 20%; margin-top: 5%;">
+            <div class="form-group login_input">
                 <label class="control-label">Username</label>
                 <input asp-for="Username" class="form-control" />
                 <span asp-validation-for="Username" class="text-danger"></span>
             </div>
-            <div class="form-group" style="margin-left: 20%; margin-right: 20%; margin-bottom: 5%;">
+            <div class="form-group login_input">
                 <label class="control-label">Password</label>
                 <input asp-for="PasswordHash" class="form-control" />
                 <span asp-validation-for="PasswordHash" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input class="btn btn-primary" type="submit" value="Login" />
+                <input class="btn btn-primary login_btn" type="submit" value="Login" />
             </div>
         </div>
     </form>
 </div>
+
+<style>
+    .login_form {
+        left: 50%;
+        top: 70%;
+        position: absolute;
+        margin-left: -25%;
+        margin-top: -25%;
+        width: 40%;
+    }
+
+    .login_menu {
+        border: double;
+        border-width: 3px;
+        border-radius: 20px;
+        background-color: #fff;
+        border-color: #000;
+    }
+
+    .login_input {
+        margin-left: 20%; 
+        margin-right: 20%; 
+        margin-top: 5%;
+    }
+</style>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
