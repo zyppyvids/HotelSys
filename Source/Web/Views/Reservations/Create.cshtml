@@ -1,19 +1,19 @@
 ﻿@model Web.Models.Reservations.ReservationsCreateViewModel
 
 @{
-    ViewData["Title"] = "Съзадаване";
+    ViewData["Title"] = "Create Reservation";
 }
 
-<h1>Съзадаване</h1>
+<h1>CREATE NEW</h1>
 
-<h4>Резервация</h4>
+<h4>NEW RESERVATION</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="RoomNumber" class="control-label">Номер на стая</label>
+                <label asp-for="RoomNumber" class="control-label">ROOM NUMBER</label>
                 <select asp-for="RoomNumber" class="form-control">
                     @foreach(int rn in Model.AllAvailableRooms)
                     {
@@ -23,7 +23,7 @@
                 <span asp-validation-for="RoomNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UserId" class="control-label">Потребител</label>
+                <label asp-for="UserId" class="control-label">USER</label>
                 <select asp-for="UserId" class="form-control">
                     @for(int i = 0; i < Model.AllUsersNames.Length; i++ )
                     {
@@ -33,7 +33,7 @@
                 <span asp-validation-for="UserId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ClientsIds" class="control-label">Клиенти</label>
+                <label asp-for="ClientsIds" class="control-label">CLIENTS</label>
                 <select asp-for="ClientsIds" class="form-control">
                     @for (int i = Model.AllClientsNames.Length - 1; i >= 0; i--)
                     {
@@ -43,27 +43,27 @@
                 <span asp-validation-for="ClientsIds" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DateAccomodation" class="control-label">Дата на настаняване</label>
+                <label asp-for="DateAccomodation" class="control-label">ACCOMODATION DATE</label>
                 <input asp-for="DateAccomodation" class="form-control" type="date"/>
                 <span asp-validation-for="DateAccomodation" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DateRelease" class="control-label">Дата на напускане</label>
+                <label asp-for="DateRelease" class="control-label">RELEASE DATE</label>
                 <input asp-for="DateRelease" class="form-control" type="date"/>
                 <span asp-validation-for="DateRelease" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BreakfastIncluded" class="control-label">Включена закуска</label>
+                <label asp-for="BreakfastIncluded" class="control-label">BREAKFAST INCLUDED</label>
                 <input asp-for="BreakfastIncluded" class="form-control" />
                 <span asp-validation-for="BreakfastIncluded" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AllInclusive" class="control-label">All Inclusive</label>
+                <label asp-for="AllInclusive" class="control-label">ALL INCLUSIVE</label>
                 <input asp-for="AllInclusive" class="form-control" />
                 <span asp-validation-for="AllInclusive" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PaymentAmount" class="control-label">Дължима сума</label>
+                <label asp-for="PaymentAmount" class="control-label">PAYMENT AMOUNT</label>
                 <input asp-for="PaymentAmount" class="form-control" />
                 <span asp-validation-for="PaymentAmount" class="text-danger"></span>
             </div>
@@ -75,7 +75,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Към списъка</a>
+    <a asp-action="Index">TO INDEX...</a>
 </div>
 
 @section Scripts {

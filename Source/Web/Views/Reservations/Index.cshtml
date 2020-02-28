@@ -1,87 +1,129 @@
 ﻿@model Web.Models.Reservations.ReservationsIndexViewModel
 
 @{
-    ViewData["Title"] = "Списък";
+    ViewData["Title"] = "Index";
 }
-<h1>Списък</h1>
+<h1>INDEX</h1>
 
 <p>
-    <a asp-action="Create">Добави нова резервация</a>
+    <a asp-action="Create">ADD NEW RESERVATION</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Номер на стая
-            </th>
-            <th>
-                Създал
-            </th>
-            <th>
-                Клиенти
-            </th>
-            <th>
-                Дата на настаняване
-            </th>
-            <th>
-                Дата на освобождаване
-            </th>
-            <th>
-                Включена закуска
-            </th>
-            <th>
-                All inclusive
-            </th>
-            <th>
-                Дължима сума
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Items)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RoomNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
-                </td>
-                <td>
-                    @foreach(string name in item.ClientsNames)
-                    {
-                        @name <br />
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateAccomodation)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateRelease)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BreakfastIncluded)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AllInclusive)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PaymentAmount)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Промени</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Изтрий</a>
-                </td>
-            </tr>
-        }
-    </tbody>
+<div class="table-responsive">
     <ul class="pagination">
         @for (var i = 1; i <= Model.Pager.PagesCount; i++)
         {
             <li class="page-item @(i == Model.Pager.CurrentPage ? "active" : "")">
-                <a asp-route-Pager.CurrentPage="@i" class="page-link">@i</a>
+                <a onclick="changePage(@i)" class="page-link">@i</a>
             </li>
         }
     </ul>
-</table>
+
+    <select onchange="changePageSize(this);">
+        @foreach (int size in Model.Pager.PageSizes)
+        {
+            if (Model.Pager.PageSize == size)
+            {
+                <option value=@size selected>@size</option>
+            }
+            else
+            {
+                <option value=@size>@size</option>
+            }
+
+        }
+    </select>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    ROOM NUMBER
+                </th>
+                <th>
+                    CREATED BY
+                </th>
+                <th>
+                    CLIENTS
+                </th>
+                <th>
+                    ACCOMODATION DATE
+                </th>
+                <th>
+                    RELEASE DATE
+                </th>
+                <th>
+                    BREAKFAST INCLUDED
+                </th>
+                <th>
+                    ALL INCLUSIVE
+                </th>
+                <th>
+                    PAYMENT AMOUNT
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RoomNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td>
+                        @foreach (string name in item.ClientsNames)
+                        {
+                            @name <br />
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateAccomodation)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateRelease)
+                    </td>
+                    <td>
+                        @(item.BreakfastIncluded ? "✓" : "✘")
+                    </td>
+                    <td>
+                        @(item.AllInclusive ? "✓" : "✘")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PaymentAmount)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">EDIT</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id">DELETE</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function changePage(num) {
+        var url = new URL(window.location.href);
+        if (url.searchParams.has("page")) {
+            url.searchParams.set("page", num);
+        } else {
+            url.searchParams.append("page", num);
+        }
+
+        window.location.href = url; 
+    }
+
+    function changePageSize(obj) {
+        var url = new URL(window.location.href);
+        console.log(url.searchParams.has("pagesize"))
+        if (url.searchParams.has("pagesize")) {
+            url.searchParams.set("pagesize", obj.value);
+        } else {
+            url.searchParams.append("pagesize", obj.value);
+        }
+
+        window.location.href = url;
+    }
+</script>

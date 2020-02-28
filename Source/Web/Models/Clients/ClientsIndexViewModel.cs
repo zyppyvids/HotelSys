@@ -7,6 +7,9 @@ namespace Web.Models.Clients
     {
         public PagerViewModel Pager;
 
+        public string[] Sorts = new string[] { "FirstName", "FamilyName" };
+        public int CurrentSort { get; set; }
+
         public ICollection<ClientsViewModel> Items { get; set; }
     }
 }

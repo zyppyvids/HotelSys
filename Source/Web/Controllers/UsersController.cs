@@ -10,13 +10,13 @@ using Web.Models.Users;
 using Web.Models.Shared;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Primitives;
 
 namespace Web.Controllers
 {
     public class UsersController : Controller
     {
         private readonly MyHotelDb _context;
-        private const int PageSize = 10;
 
         public UsersController()
         {
@@ -27,9 +27,22 @@ namespace Web.Controllers
         public async Task<IActionResult> Index(UsersIndexViewModel model)
         {
             model.Pager ??= new PagerViewModel();
-            model.Pager.CurrentPage = model.Pager.CurrentPage <= 0 ? 1 : model.Pager.CurrentPage;
 
-            List<UsersViewModel> items = await _context.Users.Skip((model.Pager.CurrentPage - 1) * PageSize).Take(PageSize).Select(u => new UsersViewModel()
+            StringValues value = StringValues.Empty;
+            Request.Query.TryGetValue("page", out value);
+            model.Pager.CurrentPage = StringValues.IsNullOrEmpty(value) ? 1 : int.Parse(value);
+
+            value = StringValues.Empty;
+            Request.Query.TryGetValue("pagesize", out value);
+            model.Pager.PageSize = StringValues.IsNullOrEmpty(value) ? 10 : int.Parse(value);
+
+            model.Pager.PagesCount = (int)Math.Ceiling((double)_context.Users.ToArray().Length / (double)model.Pager.PageSize);
+
+            value = StringValues.Empty;
+            Request.Query.TryGetValue("sort", out value);
+            model.CurrentSort = StringValues.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+
+            List<UsersViewModel> items = await _context.Users.Skip((model.Pager.CurrentPage - 1) * model.Pager.PageSize).Take(model.Pager.PageSize).Select(u => new UsersViewModel()
             {
                 Id = u.Id,
                 Username = u.Username,
@@ -44,8 +57,30 @@ namespace Web.Controllers
                 Email = u.Email
             }).ToListAsync();
 
-            model.Items = items;
-            model.Pager.PagesCount = (int)Math.Ceiling(await _context.Users.CountAsync() / (double)PageSize);
+
+
+            switch(model.CurrentSort)
+            {
+                case 1: //FirstName
+                    model.Items = items.OrderBy(i => i.FirstName).ToList();
+                    break;
+
+                case 2: //MiddleName
+                    model.Items = items.OrderBy(i => i.MiddleName).ToList();
+                    break;
+
+                case 3: //FamilyName
+                    model.Items = items.OrderBy(i => i.LastName).ToList();
+                    break;
+
+                case 4: //Email
+                    model.Items = items.OrderBy(i => i.Email).ToList();
+                    break;
+
+                default: //Usernames
+                    model.Items = items.OrderBy(i => i.Username).ToList();
+                    break;
+            }
 
             return View(model);
         }

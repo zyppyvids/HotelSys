@@ -2,6 +2,7 @@
 using Data.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,6 @@ namespace Web.Controllers
     public class RoomsController : Controller
     {
         private readonly MyHotelDb _context;
-        private const int PageSize = 10;
 
         public RoomsController()
         {
@@ -25,9 +25,18 @@ namespace Web.Controllers
         public async Task<IActionResult> Index(RoomsIndexViewModel model)
         {
             model.Pager ??= new PagerViewModel();
-            model.Pager.CurrentPage = model.Pager.CurrentPage <= 0 ? 1 : model.Pager.CurrentPage;
 
-            List<RoomsViewModel> items = await _context.Rooms.Skip((model.Pager.CurrentPage - 1) * PageSize).Take(PageSize).Select(r => new RoomsViewModel()
+            StringValues value = StringValues.Empty;
+            Request.Query.TryGetValue("page", out value);
+            model.Pager.CurrentPage = StringValues.IsNullOrEmpty(value) ? 1 : int.Parse(value);
+
+            value = StringValues.Empty;
+            Request.Query.TryGetValue("pagesize", out value);
+            model.Pager.PageSize = StringValues.IsNullOrEmpty(value) ? 10 : int.Parse(value);
+
+            model.Pager.PagesCount = (int)Math.Ceiling((double)_context.Rooms.ToArray().Length / (double)model.Pager.PageSize);
+
+            List<RoomsViewModel> items = await _context.Rooms.Skip((model.Pager.CurrentPage - 1) * model.Pager.PageSize).Take(model.Pager.PageSize).Select(r => new RoomsViewModel()
             {
                 Number = r.Number,
                 Type = r.Type,
@@ -38,7 +47,6 @@ namespace Web.Controllers
             }).ToListAsync();
 
             model.Items = items;
-            model.Pager.PagesCount = (int)Math.Ceiling(await _context.Rooms.CountAsync() / (double)PageSize);
 
             return View(model);
         }
@@ -58,14 +66,15 @@ namespace Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                Room room = await _context.Rooms.FindAsync(model.Id);
-
-                room.Number = model.Number;
-                room.Type = model.Type;
-                room.Capacity = model.Capacity;
-                room.Free = model.Free;
-                room.BedPriceAdult = model.BedPriceAdult;
-                room.BedPriceChild = model.BedPriceChild;
+                Room room = new Room()
+                {
+                    Number = model.Number,
+                    Type = model.Type,
+                    Capacity = model.Capacity,
+                    Free = model.Free,
+                    BedPriceAdult = model.BedPriceAdult,
+                    BedPriceChild = model.BedPriceChild
+                };
 
                 _context.Add(room);
                 await _context.SaveChangesAsync();
@@ -77,14 +86,14 @@ namespace Web.Controllers
         }
 
         // GET: Rooms/Edit/id
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? roomnumber)
         {
-            if (id == null)
+            if (roomnumber == null)
             {
                 return NotFound();
             }
 
-            Room room = await _context.Rooms.FindAsync(id);
+            Room room = await _context.Rooms.FindAsync(roomnumber);
             if (room == null)
             {
                 return NotFound();
@@ -137,9 +146,9 @@ namespace Web.Controllers
         }
 
         // GET: Rooms/Delete/id
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int roomnumber)
         {
-            Room room = await _context.Rooms.FindAsync(id);
+            Room room = await _context.Rooms.FindAsync(roomnumber);
             _context.Rooms.Remove(room);
             await _context.SaveChangesAsync();
 

@@ -8,13 +8,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Web.Models.Reservations;
 using Web.Models.Shared;
+using Microsoft.Extensions.Primitives;
 
 namespace Web.Controllers
 {
     public class ReservationsController : Controller
     {
         private readonly MyHotelDb _context;
-        private const int PageSize = 10;
 
         public ReservationsController()
         {
@@ -25,11 +25,23 @@ namespace Web.Controllers
         public async Task<IActionResult> Index(ReservationsIndexViewModel model)
         {
             model.Pager ??= new PagerViewModel();
-            model.Pager.CurrentPage = model.Pager.CurrentPage <= 0 ? 1 : model.Pager.CurrentPage;
+
+            StringValues value = StringValues.Empty;
+            Request.Query.TryGetValue("page", out value);
+            model.Pager.CurrentPage = StringValues.IsNullOrEmpty(value) ? 1 : int.Parse(value);
+
+            value = StringValues.Empty;
+            Request.Query.TryGetValue("pagesize", out value);
+            model.Pager.PageSize = StringValues.IsNullOrEmpty(value) ? 10 : int.Parse(value);
+
+            model.Pager.PagesCount = (int)Math.Ceiling((double)_context.Reservations.ToArray().Length / (double)model.Pager.PageSize);
+
+            value = StringValues.Empty;
+            Request.Query.TryGetValue("clientid", out value);
 
             List<ReservationsViewModel> items = new List<ReservationsViewModel>();
 
-            foreach(Reservation r in _context.Reservations.ToArray().Skip((model.Pager.CurrentPage - 1) * PageSize).Take(PageSize))
+            foreach(Reservation r in _context.Reservations.ToArray().Skip((model.Pager.CurrentPage - 1) * model.Pager.PageSize).Take(model.Pager.PageSize))
             {
                 ReservationsViewModel item = new ReservationsViewModel();
                 item.Id = r.Id;
@@ -38,7 +50,17 @@ namespace Web.Controllers
                 item.UserName = user != null ? user.FirstName + " " + user.LastName : "Unknown";
 
                 List<string> clientsNames = new List<string>();
-                foreach(int i in r.ClientsIds.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(c => int.Parse(c)))
+                int[] clientIds = r.ClientsIds.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(c => int.Parse(c)).ToArray();
+
+                if(!StringValues.IsNullOrEmpty(value))
+                {
+                    if(!clientIds.Contains(int.Parse(value)))
+                    {
+                        continue;
+                    }
+                }
+
+                foreach (int i in clientIds)
                 {
                     Client client = _context.Clients.ToArray().Where(c => c.Id == i).FirstOrDefault();
 
@@ -58,8 +80,8 @@ namespace Web.Controllers
                 items.Add(item);
             }
 
+            
             model.Items = items;
-            model.Pager.PagesCount = (int)Math.Ceiling(await _context.Reservations.CountAsync() / (double)PageSize);
 
             return View(model);
         }

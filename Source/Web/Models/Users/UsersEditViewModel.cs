@@ -48,6 +48,6 @@ namespace Web.Models.Users
         [Required]
         public bool Active { get; set; }
 
-        public DateTime DateDismissal { get; set; }
+        public DateTime? DateDismissal { get; set; }
     }
 }

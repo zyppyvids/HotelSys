@@ -4,70 +4,111 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>INDEX</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">ADD NEW ROOM</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Номер
-            </th>
-            <th>
-                Тип
-            </th>
-            <th>
-                Капацитет
-            </th>
-            <th>
-                Свободна
-            </th>
-            <th>
-                Цена на заето легло (възрастен)
-            </th>
-            <th>
-                Цена на заето легло (дете)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Items)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Number)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Type)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Capacity)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Free)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BedPriceAdult)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BedPriceChild)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Number">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.Number">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
+<div class="table-responsive">
     <ul class="pagination">
         @for (var i = 1; i <= Model.Pager.PagesCount; i++)
         {
             <li class="page-item @(i == Model.Pager.CurrentPage ? "active" : "")">
-                <a asp-route-Pager.CurrentPage="@i" class="page-link">@i</a>
+                <a onclick="changePage(@i)" class="page-link">@i</a>
             </li>
         }
     </ul>
-</table>
+
+    <select onchange="changePageSize(this);">
+        @foreach (int size in Model.Pager.PageSizes)
+        {
+            if (Model.Pager.PageSize == size)
+            {
+                <option value=@size selected>@size</option>
+            }
+            else
+            {
+                <option value=@size>@size</option>
+            }
+
+        }
+    </select>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    NUMBER
+                </th>
+                <th>
+                    TYPE
+                </th>
+                <th>
+                    CAPACITY
+                </th>
+                <th>
+                    IS FREE
+                </th>
+                <th>
+                    BED PRICE (ADULT)
+                </th>
+                <th>
+                    BED PRICE (CHILD)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Number)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Capacity)
+                    </td>
+                    <td>
+                        @(item.Free ? "✓" : "✘")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BedPriceAdult)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BedPriceChild)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Number">EDIT</a>
+                        <a asp-action="Delete" asp-route-id="@item.Number">DELETE</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function changePage(num) {
+        var url = new URL(window.location.href);
+        if (url.searchParams.has("page")) {
+            url.searchParams.set("page", num);
+        } else {
+            url.searchParams.append("page", num);
+        }
+
+        window.location.href = url;
+    }
+
+    function changePageSize(obj) {
+        var url = new URL(window.location.href);
+        if (url.searchParams.has("pagesize")) {
+            url.searchParams.set("pagesize", obj.value);
+        } else {
+            url.searchParams.append("pagesize", obj.value);
+        }
+
+        window.location.href = url;
+    }
+</script>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
@@ -49,6 +50,6 @@ namespace Web.Models.Users
         [Required]
         public bool Active { get; set; }
 
-        public DateTime DateDismissal { get; set; }
+        public DateTime? DateDismissal { get; set; }
     }
 }

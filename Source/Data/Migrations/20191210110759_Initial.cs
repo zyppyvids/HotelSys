@@ -34,7 +34,7 @@ namespace Data.Migrations
                     LastName = table.Column<string>(nullable: false),
                     PhoneNumber = table.Column<string>(nullable: false),
                     Email = table.Column<string>(nullable: false),
-                    Аdult = table.Column<bool>(nullable: false)
+                    Adult = table.Column<bool>(nullable: false)
                 });
 
             migrationBuilder.CreateTable(

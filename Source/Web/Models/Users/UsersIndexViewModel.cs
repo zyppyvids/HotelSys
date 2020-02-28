@@ -7,6 +7,9 @@ namespace Web.Models.Users
     {
         public PagerViewModel Pager;
 
+        public string[] Sorts = new string[] { "Username", "FirstName", "MiddleName", "FamilyName", "Email" };
+        public int CurrentSort { get; set; }
+
         public ICollection<UsersViewModel> Items { get; set; }
     }
 }

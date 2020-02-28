@@ -1,103 +1,177 @@
 ﻿@model Web.Models.Users.UsersIndexViewModel
 
 @{
-    ViewData["Title"] = "Списък";
+    ViewData["Title"] = "Index";
 }
 
-<h1>Списък</h1>
+<h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Добави нов потребител</a>
+    <a asp-action="Create">CREATE NEW USER</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                ID
-            </th>
-            <th>
-                Потребителско име
-            </th>
-            <th>
-                Собствено име
-            </th>
-            <th>
-                Бащино име
-            </th>
-            <th>
-                Фамилно име
-            </th>
-            <th>
-                ЕГН
-            </th>
-            <th>
-                Телефонен номер
-            </th>
-            <th>
-                Имейл
-            </th>
-            <th>
-                Дата на назначаване
-            </th>
-            <th>
-                Статус
-            </th>
-            <th>
-                Дата на освобождаване
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Items)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Username)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FirstName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MiddleName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.LastName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PersonalID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PhoneNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @item.DateAppointment.ToShortDateString()
-                </td>
-                <td>
-                    @(item.Active ? "Активен" : "Не активен")
-                </td>
-                <td>
-                    @item.DateDismissal.ToShortDateString()
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Редактирай</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Изтрий</a>
-                </td>
-            </tr>
-        }
-    </tbody>
+<div class="table-responsive">
     <ul class="pagination">
         @for (var i = 1; i <= Model.Pager.PagesCount; i++)
         {
             <li class="page-item @(i == Model.Pager.CurrentPage ? "active" : "")">
-                <a asp-route-Pager.CurrentPage="@i" class="page-link">@i</a>
+                <a onclick="changePage(@i)" class="page-link">@i</a>
             </li>
         }
     </ul>
-</table>
+
+    <div>
+        Elements:
+        <select onchange="changePageSize(this);">
+            @foreach (int size in Model.Pager.PageSizes)
+            {
+                if (Model.Pager.PageSize == size)
+                {
+                    <option value=@size selected>@size</option>
+                }
+                else
+                {
+                    <option value=@size>@size</option>
+                }
+
+            }
+        </select>
+    </div>
+
+    <div>
+        SortBy:
+        <select onchange="changeSort(this, @(Model.Sorts.Length - 1))">
+            @for (int i = 0; i < Model.Sorts.Length; i++)
+            {
+                if (Model.CurrentSort == i)
+                {
+                    <option value="@i" selected>@Model.Sorts[i]</option>
+                }
+                else
+                {
+                    <option value="@i">@Model.Sorts[i]</option>
+                }
+            }
+        </select>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    USERNAME
+                </th>
+                <th>
+                    FIRST NAME
+                </th>
+                <th>
+                    MIDDLE NAME
+                </th>
+                <th>
+                    FAMILY NAME
+                </th>
+                <th>
+                    ID NUMBER
+                </th>
+                <th>
+                    PHONE NUMBER
+                </th>
+                <th>
+                    EMAIL
+                </th>
+                <th>
+                    APPOINTMENT DATE
+                </th>
+                <th>
+                    IS ACTIVE
+                </th>
+                <th>
+                    DISMISSAL DATE
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Username)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MiddleName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PersonalID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PhoneNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @item.DateAppointment.ToShortDateString()
+                    </td>
+                    <td>
+                        @(item.Active ? "✓" : "✘")
+                    </td>
+                    <td>
+                        @if (item.DateDismissal.HasValue)
+                        {
+                            @item.DateDismissal.Value.ToShortDateString()
+                        }
+                        else
+                        {
+                            <div>None</div>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">EDIT</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id">DELETE</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function changePage(num) {
+        var url = new URL(window.location.href);
+        if (url.searchParams.has("page")) {
+            url.searchParams.set("page", num);
+        } else {
+            url.searchParams.append("page", num);
+        }
+
+        window.location.href = url;
+    }
+
+    function changePageSize(obj) {
+        var url = new URL(window.location.href);
+        if (url.searchParams.has("pagesize")) {
+            url.searchParams.set("pagesize", obj.value);
+        } else {
+            url.searchParams.append("pagesize", obj.value);
+        }
+
+        window.location.href = url;
+    }
+
+    function changeSort(obj, max) {
+        var url = new URL(window.location.href);
+        if (url.searchParams.has("sort")) {
+            url.searchParams.set("sort", obj.value);
+        } else {
+            url.searchParams.append("sort", obj.value);
+        }
+
+        window.location.href = url;
+    }
+</script>

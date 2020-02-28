@@ -2,6 +2,7 @@
 using Data.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,6 @@ namespace Web.Controllers
     public class ClientsController : Controller
     {
         private readonly MyHotelDb _context;
-        private const int PageSize = 10;
 
         public ClientsController()
         {
@@ -25,9 +25,22 @@ namespace Web.Controllers
         public async Task<IActionResult> Index(ClientsIndexViewModel model)
         {
             model.Pager ??= new PagerViewModel();
-            model.Pager.CurrentPage = model.Pager.CurrentPage <= 0 ? 1 : model.Pager.CurrentPage;
 
-            List<ClientsViewModel> items = await _context.Clients.Skip((model.Pager.CurrentPage - 1) * PageSize).Take(PageSize).Select(c => new ClientsViewModel()
+            StringValues value = StringValues.Empty;
+            Request.Query.TryGetValue("page", out value);
+            model.Pager.CurrentPage = StringValues.IsNullOrEmpty(value) ? 1 : int.Parse(value);
+
+            value = StringValues.Empty;
+            Request.Query.TryGetValue("pagesize", out value);
+            model.Pager.PageSize = StringValues.IsNullOrEmpty(value) ? 10 : int.Parse(value);
+
+            model.Pager.PagesCount = (int)Math.Ceiling((double)_context.Clients.ToArray().Length / (double)model.Pager.PageSize);
+
+            value = StringValues.Empty;
+            Request.Query.TryGetValue("sort", out value);
+            model.CurrentSort = StringValues.IsNullOrEmpty(value) ? 0 : int.Parse(value);
+
+            List<ClientsViewModel> items = await _context.Clients.Skip((model.Pager.CurrentPage - 1) * model.Pager.PageSize).Take(model.Pager.PageSize).Select(c => new ClientsViewModel()
             {
                 Id = c.Id,
                 FirstName = c.FirstName,
@@ -37,8 +50,16 @@ namespace Web.Controllers
                 Adult = c.Adult
             }).ToListAsync();
 
-            model.Items = items;
-            model.Pager.PagesCount = (int)Math.Ceiling(await _context.Clients.CountAsync() / (double)PageSize);
+            switch(model.CurrentSort)
+            {
+                case 1: //FamilyName
+                    model.Items = items.OrderBy(i => i.LastName).ToList();
+                    break;
+
+                default://FirstName
+                    model.Items = items.OrderBy(i => i.FirstName).ToList();
+                    break;
+            }
 
             return View(model);
         }
