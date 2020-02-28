@@ -19,11 +19,5 @@ namespace Web.Controllers
             //Login 
             return View(model);
         }
-
-        public async Task<IActionResult> Register(HomeIndexViewModel model)
-        {
-            //Register
-            return View(model);
-        }
     }
 }
