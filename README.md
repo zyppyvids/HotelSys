@@ -1,8 +1,7 @@
 # HotelSys
+A Hotel Management system done in .NET Core
 
-## ~A Hotel Management system done in .NET Core~
-
-SCENARIO:
+## SCENARIO
 
 ● The hotel holds only rooms.
 
@@ -15,8 +14,10 @@ users will log in to the system as either receptionist or admin user.
 
 ● Use MSSQL to store data.
 
-## Compilation
+## COMPILATION
 
 - Compiled using Visual Studio 2019 Community Edition on Windows 10 Operating System.
 
 - ASP.NET CORE is used for this project.
+
+Done by HOTELSYS team...
