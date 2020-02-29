@@ -134,6 +134,19 @@ namespace Web.Controllers
                         DateDismissal = model.DateDismissal
                     };
 
+                    if (user.DateAppointment.CompareTo(user.DateDismissal) >= 0)
+                    {
+                        ModelState.AddModelError("DateRelease", "The dismissal date cannot be before the date of appointment");
+                        return View(model);
+                    }
+
+                    if (_context.Users.ToArray().Select(u => u.Username).ToArray().Contains(user.Username))
+                    {
+                        ModelState.AddModelError("Username", "User with that username already exists");
+                        return View(model);
+                    }
+
+                    
                     _context.Users.Add(user);
                     await _context.SaveChangesAsync();
 
@@ -211,6 +224,12 @@ namespace Web.Controllers
                     user.DateAppointment = model.DateAppointment;
                     user.Active = model.Active;
                     user.DateDismissal = model.DateDismissal;
+
+                    if (user.DateAppointment.CompareTo(user.DateDismissal) >= 0)
+                    {
+                        ModelState.AddModelError("DateRelease", "The dismissal date cannot be before the date of appointment");
+                        return View(model);
+                    }
 
                     try
                     {

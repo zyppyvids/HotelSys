@@ -94,6 +94,27 @@ namespace Web.Controllers
             }
         }
 
+        private float CalculatePaymentAmount(int nAdult, int nChild, int nDays, float priceAdult, float priceChild, bool allInclusive, bool incBreakfast)
+        {
+            float amount = 0.0f;
+
+            amount += nAdult * priceAdult * nDays;
+            amount += nChild + priceChild * nDays;
+
+            if(allInclusive)
+            {
+                amount += 30 * nAdult;
+                amount += 15 * nChild;
+            }
+
+            if(incBreakfast)
+            {
+                amount += nDays * (nChild + nAdult) * 8;
+            }
+
+            return amount;
+        }
+
         private ReservationsCreateViewModel GenerateReservationCraeteViewModel(ReservationsCreateViewModel model = null)
         {
             if (model == null)
@@ -101,6 +122,7 @@ namespace Web.Controllers
                 model = new ReservationsCreateViewModel();
             }
             model.AllAvailableRooms = _context.Rooms.ToArray().Select(r => r.Number).ToArray();
+            model.AllAvailableRoomsTypes = _context.Rooms.ToArray().Select(r => r.Type).ToArray();
 
             model.AllUsersNames = _context.Users.ToArray().Select(user => user.FirstName + " " + user.LastName).ToArray();
             model.AllUsersIds = _context.Users.ToArray().Select(user => user.Id).ToArray();
@@ -137,17 +159,26 @@ namespace Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    Reservation reservation = new Reservation
+                    Reservation reservation = new Reservation();
+
+                    reservation.RoomNumber = model.RoomNumber;
+                    reservation.UserId = model.UserId;
+                    reservation.ClientsIds = string.Join(",", model.ClientsIds);
+                    reservation.DateAccomodation = model.DateAccomodation;
+                    reservation.DateRelease = model.DateRelease;
+                    reservation.BreakfastIncluded = model.BreakfastIncluded;
+                    reservation.AllInclusive = model.AllInclusive;
+
+                    if (reservation.DateAccomodation.CompareTo(reservation.DateRelease) >= 0)
                     {
-                        RoomNumber = model.RoomNumber,
-                        UserId = model.UserId,
-                        ClientsIds = string.Join(",", model.ClientsIds),
-                        DateAccomodation = model.DateAccomodation,
-                        DateRelease = model.DateRelease,
-                        BreakfastIncluded = model.BreakfastIncluded,
-                        AllInclusive = model.AllInclusive,
-                        PaymentAmount = model.PaymentAmount
-                    };
+                        ModelState.AddModelError("DateRelease", "The release date cannot be before the date of аccomodation");
+                        return View(GenerateReservationCraeteViewModel(model));
+                    }
+
+                    Room room = _context.Rooms.ToArray().Where(r => r.Number == reservation.RoomNumber).FirstOrDefault();
+                    int nAdult = _context.Clients.ToArray().Where(c => model.ClientsIds.Contains(c.Id) && c.Adult).ToArray().Length;
+                    int nChild = _context.Clients.ToArray().Where(c => model.ClientsIds.Contains(c.Id) && !c.Adult).ToArray().Length;
+                    reservation.PaymentAmount = CalculatePaymentAmount(nAdult, nChild, (reservation.DateRelease - reservation.DateAccomodation).Days, room.BedPriceAdult, room.BedPriceChild, reservation.AllInclusive, reservation.BreakfastIncluded);
 
                     _context.Reservations.Add(reservation);
                     await _context.SaveChangesAsync();
@@ -204,7 +235,6 @@ namespace Web.Controllers
                 model.DateRelease = reservation.DateRelease;
                 model.BreakfastIncluded = reservation.BreakfastIncluded;
                 model.AllInclusive = reservation.AllInclusive;
-                model.PaymentAmount = reservation.PaymentAmount;
 
                 return View(GenerateReservationEditViewModel(model));
             }
@@ -223,17 +253,25 @@ namespace Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    Reservation reservation = new Reservation
+                    Reservation reservation = new Reservation();
+                    reservation.RoomNumber = model.RoomNumber;
+                    reservation.UserId = model.UserId;
+                    reservation.ClientsIds = string.Join(",", model.ClientsIds);
+                    reservation.DateAccomodation = model.DateAccomodation;
+                    reservation.DateRelease = model.DateRelease;
+                    reservation.BreakfastIncluded = model.BreakfastIncluded;
+                    reservation.AllInclusive = model.AllInclusive;
+
+                    if (reservation.DateAccomodation.CompareTo(reservation.DateRelease) >= 0)
                     {
-                        RoomNumber = model.RoomNumber,
-                        UserId = model.UserId,
-                        ClientsIds = string.Join(",", model.ClientsIds),
-                        DateAccomodation = model.DateAccomodation,
-                        DateRelease = model.DateRelease,
-                        BreakfastIncluded = model.BreakfastIncluded,
-                        AllInclusive = model.AllInclusive,
-                        PaymentAmount = model.PaymentAmount
-                    };
+                        ModelState.AddModelError("DateRelease", "The release date cannot be before the date of аccomodation");
+                        return View(GenerateReservationEditViewModel(model));
+                    }
+
+                    Room room = _context.Rooms.ToArray().Where(r => r.Number == reservation.RoomNumber).FirstOrDefault();
+                    int nAdult = _context.Clients.ToArray().Where(c => model.ClientsIds.Contains(c.Id) && c.Adult).ToArray().Length;
+                    int nChild = _context.Clients.ToArray().Where(c => model.ClientsIds.Contains(c.Id) && !c.Adult).ToArray().Length;
+                    reservation.PaymentAmount = CalculatePaymentAmount(nAdult, nChild, (reservation.DateRelease - reservation.DateAccomodation).Days, room.BedPriceAdult, room.BedPriceChild, reservation.AllInclusive, reservation.BreakfastIncluded);
 
                     try
                     {
