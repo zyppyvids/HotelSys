@@ -1,0 +1,57 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div class="login_box" style="width:70%">
+    <div class="login_bar">
+        <h4 class="login_header">
+            Administrator Menu
+        </h4>
+    </div>
+    <div class="container">
+        <div class="row" style="border-bottom: 2px solid grey;padding-bottom: 2%;">
+            <div class="col-sm" style="padding-top: 2%;">
+                <h4 style="padding-left:4%;padding-top: 3%;">Users</h4>
+            </div>
+            <div class="col-sm" style="padding-top: 2%;">
+                <a asp-action="List_Users" class="btn btn-primary" style="width: 75%;">LIST</a>
+            </div>
+            <div class="col-sm" style="padding-top: 2%;">
+                <a asp-action="Create_Users" class="btn btn-primary" style="width: 75%;">CREATE</a>
+            </div>
+        </div>
+        <div class="row" style="border-bottom: 2px solid grey;padding-bottom: 2%">
+            <div class="col-sm">
+                <h4 style="padding-left:4%;padding-top: 8%;">Rooms</h4>
+            </div>
+            <div class="col-sm" style="padding-top: 2%;">
+                <a asp-action="List_Rooms" class="btn btn-primary" style="width: 75%;">LIST</a>
+            </div>
+            <div class="col-sm" style="padding-top: 2%;">
+                <a asp-action="Create_Rooms" class="btn btn-primary" style="width: 75%;">CREATE</a>
+            </div>
+        </div>
+        <div class="row" style="border-bottom: 2px solid grey;padding-bottom: 2%">
+            <div class="col-sm">
+                <h4 style="padding-left:4%;padding-top: 8%;">Clients</h4>
+            </div>
+            <div class="col-sm" style="padding-top: 2%;">
+                <a asp-action="List_Clients" class="btn btn-primary" style="width: 75%;">LIST</a>
+            </div>
+            <div class="col-sm" style="padding-top: 2%;">
+                <a asp-action="Create_Clients" class="btn btn-primary" style="width: 75%;">CREATE</a>
+            </div>
+        </div>
+        <div class="row" style="padding-bottom: 3%">
+            <div class="col-sm">
+                <h4 style="padding-left:4%;padding-top: 8%;">Reservations</h4>
+            </div>
+            <div class="col-sm" style="padding-top: 2%;">
+                <a asp-action="List_Reservations" class="btn btn-primary" style="width: 75%;">LIST</a>
+            </div>
+            <div class="col-sm" style="padding-top: 2%;">
+                <a asp-action="Create_Reservations" class="btn btn-primary" style="width: 75%;">CREATE</a>
+            </div>
+        </div>
+    </div>
+</div>
