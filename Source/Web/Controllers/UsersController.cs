@@ -308,5 +308,18 @@ namespace Web.Controllers
         {
             Response.Cookies.Delete(key);
         }
+
+        public IActionResult Back_To_Menu()
+        {
+            //if (administator)
+            //{
+            //return RedirectToAction("Administrator_Menu", "Menu"); 
+            //}
+            //else
+            //{
+            //return RedirectToAction("User_Menu", "Menu");
+            //}
+            return RedirectToAction("Administrator_Menu", "Menu");
+        }
     }
 }
