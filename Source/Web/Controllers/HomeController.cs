@@ -36,7 +36,7 @@ namespace Web.Controllers
         {
             if (GetCookie("LoggedIn") == "true")
             {
-                return Redirect("/Users");
+                return Redirect("/Menu/User_Menu");
             }
             else
             {
@@ -45,8 +45,18 @@ namespace Web.Controllers
                 {
                     if (user.PasswordHash == GetPasswordHash(model.PasswordHash))
                     {
-                        SetCookie("LoggedIn", "true");
-                        return Redirect("/Users");
+                        if(user.Active)
+                        {
+                            SetCookie("LoggedIn", "true");
+                            SetCookie("Username", user.Username);
+                            return Redirect("/Menu/User_Menu");
+                        } 
+                        else
+                        {
+                            ModelState.AddModelError("Username", "User with that username is no more acitve");
+                            return View(model);
+                        }
+                        
                     }
                     else
                     {
@@ -58,6 +68,12 @@ namespace Web.Controllers
                 ModelState.AddModelError("Username", "User with that username does not exist!");
                 return View(model);
             }
+        }
+
+        public IActionResult Logout()
+        {
+            RemoveCookie("LoggedIn");
+            return Redirect("/");
         }
 
         private string GetPasswordHash(string rawData)
