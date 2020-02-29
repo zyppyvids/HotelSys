@@ -13,6 +13,9 @@ namespace Web.Models.Reservations
         public int[] AllAvailableRooms { get; set; }
 
         [HiddenInput]
+        public String[] AllAvailableRoomsTypes { get; set; }
+
+        [HiddenInput]
         public int RoomNumber { get; set; }
 
         [HiddenInput]

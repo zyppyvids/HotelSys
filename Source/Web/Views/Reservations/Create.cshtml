@@ -15,9 +15,9 @@
             <div class="form-group">
                 <label asp-for="RoomNumber" class="control-label">ROOM NUMBER</label>
                 <select asp-for="RoomNumber" class="form-control">
-                    @foreach(int rn in Model.AllAvailableRooms)
+                    @for (int i = 0; i < Model.AllAvailableRooms.Length; i++)
                     {
-                        <option value=@rn>@rn</option>
+                       <option value=@Model.AllAvailableRooms[i]>#@Model.AllAvailableRooms[i] -> @Model.AllAvailableRoomsTypes[i]</option>
                     }
                 </select>
                 <span asp-validation-for="RoomNumber" class="text-danger"></span>
@@ -44,12 +44,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="DateAccomodation" class="control-label">ACCOMODATION DATE</label>
-                <input asp-for="DateAccomodation" class="form-control" type="date"/>
+                <input asp-for="DateAccomodation" class="form-control" type="date" value=""/>
                 <span asp-validation-for="DateAccomodation" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DateRelease" class="control-label">RELEASE DATE</label>
-                <input asp-for="DateRelease" class="form-control" type="date"/>
+                <input asp-for="DateRelease" class="form-control" type="date" value=""/>
                 <span asp-validation-for="DateRelease" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -61,11 +61,6 @@
                 <label asp-for="AllInclusive" class="control-label">ALL INCLUSIVE</label>
                 <input asp-for="AllInclusive" class="form-control" />
                 <span asp-validation-for="AllInclusive" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PaymentAmount" class="control-label">PAYMENT AMOUNT</label>
-                <input asp-for="PaymentAmount" class="form-control" />
-                <span asp-validation-for="PaymentAmount" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Създай" class="btn btn-primary" />
