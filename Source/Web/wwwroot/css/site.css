@@ -36,6 +36,15 @@ html {
   }
 }
 
+.center{
+    left: 50%;
+    top: 70%;
+    position: absolute;
+    margin-left: -25%;
+    margin-top: -25%;
+    width: 50%;
+}
+
 .login_box {
     border-radius: 25px;
     border: 2px solid Highlight;
