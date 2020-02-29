@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 
 namespace Web.Controllers
 {
@@ -7,92 +9,251 @@ namespace Web.Controllers
     {
         public IActionResult Administrator_Menu()
         {
-            return View();
+            if (GetCookie("LoggedIn") != "true")
+            {
+                return Redirect("/");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         public IActionResult User_Menu()
         {
-            return View();
+            if (GetCookie("LoggedIn") != "true")
+            {
+                return Redirect("/");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         public IActionResult List_Users()
         {
-            return RedirectToAction("Index", "Users");
+            if (GetCookie("LoggedIn") != "true")
+            {
+                return Redirect("/");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Users");
+            }
         }
 
         public IActionResult Create_Users()
         {
-            return RedirectToAction("Create", "Users");
+            if (GetCookie("LoggedIn") != "true")
+            {
+                return Redirect("/");
+            }
+            else
+            {
+                return RedirectToAction("Create", "Users");
+            }
         }
 
         public IActionResult Edit_Users()
         {
-            return RedirectToAction("Edit", "Users");
+            if (GetCookie("LoggedIn") != "true")
+            {
+                return Redirect("/");
+            }
+            else
+            {
+                return RedirectToAction("Edit", "Users");
+            }
         }
 
         public IActionResult Delete_Users()
         {
-            return RedirectToAction("Delete", "Users");
+            if (GetCookie("LoggedIn") != "true")
+            {
+                return Redirect("/");
+            }
+            else
+            {
+                return RedirectToAction("Delete", "Users");
+            }
         }
 
         public IActionResult List_Rooms()
         {
-            return RedirectToAction("Index", "Rooms");
+            if (GetCookie("LoggedIn") != "true")
+            {
+                return Redirect("/");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Rooms");
+            }
         }
 
         public IActionResult Create_Rooms()
         {
-            return RedirectToAction("Create", "Rooms");
+            if (GetCookie("LoggedIn") != "true")
+            {
+                return Redirect("/");
+            }
+            else
+            {
+                return RedirectToAction("Create", "Rooms");
+            }
         }
 
         public IActionResult Edit_Rooms()
         {
-            return RedirectToAction("Edit", "Rooms");
+            if (GetCookie("LoggedIn") != "true")
+            {
+                return Redirect("/");
+            }
+            else
+            {
+                return RedirectToAction("Edit", "Rooms");
+            }
         }
 
         public IActionResult Delete_Rooms()
         {
-            return RedirectToAction("Delete", "Rooms");
+            if (GetCookie("LoggedIn") != "true")
+            {
+                return Redirect("/");
+            }
+            else
+            {
+                return RedirectToAction("Delete", "Rooms");
+            }
         }
 
         public IActionResult List_Clients()
         {
-            return RedirectToAction("Index", "Clients");
+            if (GetCookie("LoggedIn") != "true")
+            {
+                return Redirect("/");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Clients");
+            }
         }
 
         public IActionResult Create_Clients()
         {
-            return RedirectToAction("Create", "Clients");
+            if (GetCookie("LoggedIn") != "true")
+            {
+                return Redirect("/");
+            }
+            else
+            {
+                return RedirectToAction("Create", "Clients");
+            }
         }
 
         public IActionResult Edit_Clients()
         {
-            return RedirectToAction("Edit", "Clients");
+            if (GetCookie("LoggedIn") != "true")
+            {
+                return Redirect("/");
+            }
+            else
+            {
+                return RedirectToAction("Edit", "Clients");
+            }
         }
 
         public IActionResult Delete_Clients()
         {
-            return RedirectToAction("Delete", "Clients");
+            if (GetCookie("LoggedIn") != "true")
+            {
+                return Redirect("/");
+            }
+            else
+            {
+                return RedirectToAction("Delete", "Clients");
+            }
         }
 
         public IActionResult List_Reservations()
         {
-            return RedirectToAction("Index", "Reservations");
+            if (GetCookie("LoggedIn") != "true")
+            {
+                return Redirect("/");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Reservations");
+            }
         }
 
         public IActionResult Create_Reservations()
         {
-            return RedirectToAction("Create", "Reservations");
+            if (GetCookie("LoggedIn") != "true")
+            {
+                return Redirect("/");
+            }
+            else
+            {
+                return RedirectToAction("Create", "Reservations");
+            }
         }
 
         public IActionResult Edit_Reservations()
         {
-            return RedirectToAction("Edit", "Reservations");
+            if (GetCookie("LoggedIn") != "true")
+            {
+                return Redirect("/");
+            }
+            else
+            {
+                return RedirectToAction("Edit", "Reservations");
+            }
         }
 
         public IActionResult Delete_Reservations()
         {
-            return RedirectToAction("Delete", "Reservations");
+            if (GetCookie("LoggedIn") != "true")
+            {
+                return Redirect("/");
+            }
+            else
+            {
+                return RedirectToAction("Delete", "Reservations");
+            }
+        }
+
+        private string GetCookie(string key)
+        {
+            try
+            {
+                return Request.Cookies[key];
+            }
+            catch (KeyNotFoundException)
+            {
+                return "false";
+            }
+        }
+
+        private void SetCookie(string key, string value, int? expireTime = null)
+        {
+            CookieOptions option = new CookieOptions();
+
+            if (expireTime.HasValue)
+            {
+                option.Expires = DateTime.Now.AddMinutes(expireTime.Value);
+
+                Response.Cookies.Append(key, value, option);
+            }
+            else
+            {
+                Response.Cookies.Append(key, value);
+            }
+        }
+
+        private void RemoveCookie(string key)
+        {
+            Response.Cookies.Delete(key);
         }
     }
 }
