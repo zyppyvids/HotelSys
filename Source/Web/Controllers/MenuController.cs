@@ -9,13 +9,20 @@ namespace Web.Controllers
     {
         public IActionResult Administrator_Menu()
         {
-            if (GetCookie("LoggedIn") != "true")
+            if (GetCookie("LoggedIn") == "true")
             {
-                return Redirect("/");
+                if (GetCookie("Username") == "HotelSysAdmin")
+                {
+                    return View();
+                }
+                else
+                {
+                    return Redirect("/Menu/User_Menu");
+                }
             }
             else
             {
-                return View();
+                return Redirect("/");
             }
         }
 
@@ -51,7 +58,12 @@ namespace Web.Controllers
             }
             else
             {
-                return RedirectToAction("Create", "Users");
+                if(GetCookie("Username") == "HotelSysAdmin")
+                {
+                    return RedirectToAction("Create", "Users");
+                }
+
+                return Redirect("/Menu/User_Menu");
             }
         }
 
@@ -63,7 +75,12 @@ namespace Web.Controllers
             }
             else
             {
-                return RedirectToAction("Edit", "Users");
+                if (GetCookie("Username") == "HotelSysAdmin")
+                {
+                    return RedirectToAction("Edit", "Users");
+                }
+
+                return Redirect("/Menu/User_Menu");
             }
         }
 
@@ -75,7 +92,12 @@ namespace Web.Controllers
             }
             else
             {
-                return RedirectToAction("Delete", "Users");
+                if (GetCookie("Username") == "HotelSysAdmin")
+                {
+                    return RedirectToAction("Delete", "Users");
+                }
+
+                return Redirect("/Menu/User_Menu");
             }
         }
 

@@ -24,6 +24,11 @@ namespace Web.Controllers
         //GET: /Index
         public IActionResult Index()
         {
+            if (GetCookie("LoggedIn") == "true")
+            {
+                return Redirect("/Menu/User_Menu");
+            }
+
             LoginViewModel model = new LoginViewModel();
 
             return View(model);
