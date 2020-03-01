@@ -144,9 +144,9 @@ namespace Web.Controllers
                         DateDismissal = model.DateDismissal
                     };
 
-                    if (user.DateAppointment.CompareTo(user.DateDismissal) >= 0)
+                    if (user.DateDismissal != null && user.DateAppointment.CompareTo(user.DateDismissal) >= 0)
                     {
-                        ModelState.AddModelError("DateRelease", "The dismissal date cannot be before the date of appointment");
+                        ModelState.AddModelError("DateDismissal", "The dismissal date cannot be before the date of appointment");
                         return View(model);
                     }
 
@@ -355,14 +355,6 @@ namespace Web.Controllers
 
         public IActionResult Back_To_Menu()
         {
-            //if (administator)
-            //{
-            //return RedirectToAction("Administrator_Menu", "Menu"); 
-            //}
-            //else
-            //{
-            //return RedirectToAction("User_Menu", "Menu");
-            //}
             return RedirectToAction("Administrator_Menu", "Menu");
         }
     }

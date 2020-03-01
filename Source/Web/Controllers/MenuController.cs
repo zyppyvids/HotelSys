@@ -34,7 +34,14 @@ namespace Web.Controllers
             }
             else
             {
-                return View();
+                if (GetCookie("Username") == "HotelSysAdmin")
+                {
+                    return Redirect("/Menu/Administrator_Menu");
+                }
+                else
+                {
+                    return View();
+                }
             }
         }
 
