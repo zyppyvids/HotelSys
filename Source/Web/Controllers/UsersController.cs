@@ -33,6 +33,11 @@ namespace Web.Controllers
             }
             else
             {
+                if (GetCookie("Username") != "HotelSysAdmin")
+                {
+                    return Redirect("/Menu/User_Menu");
+                }
+
                 model.Pager ??= new PagerViewModel();
 
                 StringValues value = StringValues.Empty;
@@ -100,6 +105,11 @@ namespace Web.Controllers
             }
             else
             {
+                if (GetCookie("Username") != "HotelSysAdmin")
+                {
+                    return Redirect("/Menu/User_Menu");
+                }
+
                 UsersCreateViewModel model = new UsersCreateViewModel();
 
                 return View(model);
@@ -166,6 +176,11 @@ namespace Web.Controllers
             }
             else
             {
+                if (GetCookie("Username") != "HotelSysAdmin")
+                {
+                    return Redirect("/Menu/User_Menu");
+                }
+
                 if (id == null)
                 {
                     return NotFound();
@@ -206,6 +221,11 @@ namespace Web.Controllers
             }
             else
             {
+                if (GetCookie("Username") != "HotelSysAdmin")
+                {
+                    return Redirect("/Menu/User_Menu");
+                }
+
                 if (ModelState.IsValid)
                 {
                     User user = await _context.Users.FindAsync(model.Id);
@@ -264,6 +284,11 @@ namespace Web.Controllers
             }
             else
             {
+                if (GetCookie("Username") != "HotelSysAdmin")
+                {
+                    return Redirect("/Menu/User_Menu");
+                }
+
                 User user = await _context.Users.FindAsync(id);
                 _context.Users.Remove(user);
                 await _context.SaveChangesAsync();
