@@ -59,54 +59,6 @@ namespace Web.Controllers
             }
         }
 
-        // GET: Rooms/Create
-        public IActionResult Create()
-        {
-            if (GetCookie("LoggedIn") != "true")
-            {
-                return Redirect("/");
-            }
-            else
-            {
-                RoomsCreateViewModel model = new RoomsCreateViewModel();
-
-                return View(model);
-            }
-        }
-
-        // POST: Rooms/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(RoomsCreateViewModel model)
-        {
-            if (GetCookie("LoggedIn") != "true")
-            {
-                return Redirect("/");
-            }
-            else
-            {
-                if (ModelState.IsValid)
-                {
-                    Room room = new Room()
-                    {
-                        Number = model.Number,
-                        Type = model.Type,
-                        Capacity = model.Capacity,
-                        Free = model.Free,
-                        BedPriceAdult = model.BedPriceAdult,
-                        BedPriceChild = model.BedPriceChild
-                    };
-
-                    _context.Add(room);
-                    await _context.SaveChangesAsync();
-
-                    return RedirectToAction(nameof(Index));
-                }
-
-                return View(model);
-            }
-        }
-
         // GET: Rooms/Edit/id
         public async Task<IActionResult> Edit(int? roomnumber)
         {
